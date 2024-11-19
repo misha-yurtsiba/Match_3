@@ -45,19 +45,18 @@ public class ProjectInstaller : MonoInstaller, IInitializable
             .AsSingle()
             .NonLazy();
 
-        Container.BindInterfacesAndSelfTo<MenuState>()
-            .AsSingle()
-            .NonLazy();
-
         Container.BindInterfacesAndSelfTo<GameplayState>()
             .AsSingle()
             .NonLazy();
 
+        Container.BindInterfacesAndSelfTo<MenuState>()
+            .AsSingle()
+            .NonLazy();
 
         StateMachine stateMachine = Container.Resolve<StateMachine>();
 
-        stateMachine.AddState<LoadingSceneState>(Container.Resolve<LoadingSceneState>());
         stateMachine.AddState<MenuState>(Container.Resolve<MenuState>());
+        stateMachine.AddState<LoadingSceneState>(Container.Resolve<LoadingSceneState>());
         stateMachine.AddState<GameplayState>(Container.Resolve<GameplayState>());
     }
 
