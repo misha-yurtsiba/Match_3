@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-public class GameplayState : IState, ITickable
+public class GameplayState : IState
 {
     private ISceneChanger _changer;
 
@@ -17,14 +17,6 @@ public class GameplayState : IState, ITickable
 
     public void Exit()
     {
-    }
-
-    public void Tick()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            _changer.ChangeScene(Scenes.Menu);
-        }
     }
 }
 

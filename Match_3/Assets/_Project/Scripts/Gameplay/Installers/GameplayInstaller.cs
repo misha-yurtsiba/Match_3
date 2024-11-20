@@ -6,9 +6,38 @@ using Zenject;
 public class GameplayInstaller : MonoInstaller 
 {
     [SerializeField] private GameplayStateMachine _gameplayStateMachine;
+    [SerializeField] private GameTile _gameTilePrefab;
+    [SerializeField] private FruitsPrefabs _fruitsPrefabs;
     public override void InstallBindings()
     {
+        BindGameTilePrefab();
+
+        BindGameBoard();
+
         BindGameplayStateMachine();
+    }
+
+    private void BindGameTilePrefab()
+    {
+        Container
+            .BindInterfacesAndSelfTo<GameTile>()
+            .FromInstance(_gameTilePrefab)
+            .AsSingle()
+            .NonLazy();
+
+        Container
+            .BindInterfacesAndSelfTo<FruitsPrefabs>()
+            .FromInstance(_fruitsPrefabs)
+            .AsSingle()
+            .NonLazy();
+    }
+
+    private void BindGameBoard()
+    {
+        Container
+            .BindInterfacesAndSelfTo<GameBoard>()
+            .AsSingle()
+            .NonLazy();
     }
 
     private void BindGameplayStateMachine()
