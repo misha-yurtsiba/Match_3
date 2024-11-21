@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class Fruit : Item
 {
-    
+    [SerializeField] private int _index;
+    public int Index => _index;
 }

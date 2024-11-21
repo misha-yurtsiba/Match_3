@@ -12,6 +12,10 @@ public class GameplayInstaller : MonoInstaller
     {
         BindGameTilePrefab();
 
+        BindFactory();
+
+        BindBoardGenerator();
+
         BindGameBoard();
 
         BindGameplayStateMachine();
@@ -30,6 +34,19 @@ public class GameplayInstaller : MonoInstaller
             .FromInstance(_fruitsPrefabs)
             .AsSingle()
             .NonLazy();
+    }
+    private void BindFactory()
+    {
+        Container
+            .BindInterfacesAndSelfTo<FruitFactory>()
+            .AsSingle();
+    }
+
+    private void BindBoardGenerator()
+    {
+        Container
+            .BindInterfacesAndSelfTo<BoardGenerator>()
+            .AsSingle();
     }
 
     private void BindGameBoard()

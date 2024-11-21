@@ -5,12 +5,15 @@ using UnityEngine;
 public class BoardGenerator
 {
     private readonly GameTile _gameTilePrefab;
-    private readonly FruitsPrefabs _fruitsPrefabs;
+    private readonly FruitFactory _fruitFactory;
 
-    public BoardGenerator(GameTile gameTilePrefab, FruitsPrefabs fruitsPrefabs)
+    private ItemFactory _itemFactory;
+    public BoardGenerator(GameTile gameTilePrefab, FruitFactory fruitFactory)
     {
         _gameTilePrefab = gameTilePrefab;
-        _fruitsPrefabs = fruitsPrefabs;
+        _fruitFactory = fruitFactory;
+
+        _itemFactory = _fruitFactory;
     }
     public GameTile[,] GenerateBoard(int width, int height)
     {
@@ -20,14 +23,15 @@ public class BoardGenerator
         {
             for (int j = 0; j < height; j++)
             {
-                int randomIndex = Random.Range(0, _fruitsPrefabs.prefabList.Count);
-                Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], new Vector3(i,j,-0.5f), Quaternion.identity);
+                Item item = _itemFactory.Create(new Vector3(i, j, -0.5f), gameTiles);
 
                 gameTiles[i, j] = Object.Instantiate(_gameTilePrefab, new Vector3(i,j,0), Quaternion.identity);
-                gameTiles[i, j].curentItem = fruit;
+                gameTiles[i, j].curentItem = item;
             }
         }
 
         return gameTiles;
     }
+
+
 }
