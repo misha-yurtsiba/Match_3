@@ -7,6 +7,7 @@ public class GameplayInstaller : MonoInstaller
 {
     [SerializeField] private GameplayStateMachine _gameplayStateMachine;
     [SerializeField] private GameTile _gameTilePrefab;
+    [SerializeField] private InputHandler _inputHandler;
     [SerializeField] private FruitsPrefabs _fruitsPrefabs;
     public override void InstallBindings()
     {
@@ -14,9 +15,13 @@ public class GameplayInstaller : MonoInstaller
 
         BindFactory();
 
+        BindFruitMover();
+
         BindBoardGenerator();
 
         BindGameBoard();
+
+        BindInputHandler();
 
         BindGameplayStateMachine();
     }
@@ -42,6 +47,13 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle();
     }
 
+    private void BindFruitMover()
+    {
+        Container
+            .BindInterfacesAndSelfTo<FruitMover>()
+            .AsSingle();
+    }
+
     private void BindBoardGenerator()
     {
         Container
@@ -57,6 +69,13 @@ public class GameplayInstaller : MonoInstaller
             .NonLazy();
     }
 
+    private void BindInputHandler()
+    {
+        Container
+            .BindInterfacesAndSelfTo<InputHandler>()
+            .FromInstance(_inputHandler)
+            .AsSingle();
+    }
     private void BindGameplayStateMachine()
     {
         Container
@@ -70,9 +89,16 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle()
             .NonLazy();
 
+        Container
+            .BindInterfacesAndSelfTo<FruitMoveState>()
+            .AsSingle()
+            .NonLazy();
+
         PlayState playState = Container.Resolve<PlayState>();
+        FruitMoveState FruitMoveState = Container.Resolve<FruitMoveState>();
 
         _gameplayStateMachine.Init();
         _gameplayStateMachine.AddState<PlayState>(playState);
+        _gameplayStateMachine.AddState<FruitMoveState>(FruitMoveState);
     }
 }

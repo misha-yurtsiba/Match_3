@@ -524,6 +524,7 @@ MonoBehaviour:
   _gameplayStateMachine: {fileID: 663021101}
   _gameTilePrefab: {fileID: 8651722277580835224, guid: 578c928da37723849aa3c605c7726387,
     type: 3}
+  _inputHandler: {fileID: 1454261341}
   _fruitsPrefabs: {fileID: 11400000, guid: d2d3f8f6ee7cbac4f8d1997c278066d4, type: 2}
 --- !u!1 &1454261340
 GameObject:

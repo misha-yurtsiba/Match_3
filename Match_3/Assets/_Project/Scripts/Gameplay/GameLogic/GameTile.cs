@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameTile : MonoBehaviour
 {
     public Item curentItem;
-
+    public int xPos;
+    public int yPos;
 
 }

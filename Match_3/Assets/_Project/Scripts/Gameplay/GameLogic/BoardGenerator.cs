@@ -25,8 +25,14 @@ public class BoardGenerator
             {
                 Item item = _itemFactory.Create(new Vector3(i, j, -0.5f), gameTiles);
 
-                gameTiles[i, j] = Object.Instantiate(_gameTilePrefab, new Vector3(i,j,0), Quaternion.identity);
-                gameTiles[i, j].curentItem = item;
+                GameTile gameTile = Object.Instantiate(_gameTilePrefab, new Vector3(i, j, 0), Quaternion.identity);
+                item.SetTile(gameTile);
+
+                gameTile.curentItem = item;
+                gameTile.xPos = i;
+                gameTile.yPos = j;
+
+                gameTiles[i, j] = gameTile;
             }
         }
 

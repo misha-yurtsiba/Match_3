@@ -8,6 +8,8 @@ public class GameBoard
 
     private GameTile[,] _board;
 
+    public int x;
+    public int y;
     public GameBoard(BoardGenerator boardGenerator)
     {
         _boardGenerator = boardGenerator;
@@ -15,6 +17,13 @@ public class GameBoard
 
     public void Init()
     {
-        _board = _boardGenerator.GenerateBoard(8, 8);
+        x = 8;
+        y = 8;
+        _board = _boardGenerator.GenerateBoard(x, y);
+    }
+
+    public GameTile GetTile(int x, int y)
+    {
+        return _board[x, y];
     }
 }

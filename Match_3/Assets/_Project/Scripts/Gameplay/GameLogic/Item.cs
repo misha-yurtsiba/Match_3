@@ -7,4 +7,6 @@ public abstract class Item : MonoBehaviour
     private GameTile _curentTile;
     public GameTile CurentTile => _curentTile;
     
+
+    public void SetTile(GameTile newTile) => _curentTile = newTile;
 }
