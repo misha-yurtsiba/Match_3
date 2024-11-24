@@ -35,14 +35,14 @@ public class InputHandler : MonoBehaviour
 
     private void StartSwipe(InputAction.CallbackContext context)
     {
-         _isSwiping = true;
+        _isSwiping = true;
         _startPosition = _position;
         startSwipe?.Invoke(_startPosition);
     }
 
     private void DetectSwipeDirection()
     {
-        if (Vector2.Distance(_startPosition, _position) < _detectonDistance)
+        if (Vector2.Distance(_startPosition, _position) > _detectonDistance)
         {
             Vector2 direction = (_position - _startPosition).normalized;
 

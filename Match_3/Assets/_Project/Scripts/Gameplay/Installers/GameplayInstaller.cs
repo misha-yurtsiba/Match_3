@@ -21,6 +21,8 @@ public class GameplayInstaller : MonoInstaller
 
         BindGameBoard();
 
+        BindMatchCheker();
+
         BindInputHandler();
 
         BindGameplayStateMachine();
@@ -69,6 +71,12 @@ public class GameplayInstaller : MonoInstaller
             .NonLazy();
     }
 
+    private void BindMatchCheker()
+    {
+        Container
+            .BindInterfacesAndSelfTo<MatchCheker>()
+            .AsSingle();
+    }
     private void BindInputHandler()
     {
         Container
