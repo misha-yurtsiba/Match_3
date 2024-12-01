@@ -13,7 +13,7 @@ public class MatchCheker
         _fruits = new List<Fruit>();
     }
 
-    public IEnumerable<Fruit> FindMatch()
+    public List<Fruit> FindMatch()
     {
         _fruits.Clear();
 

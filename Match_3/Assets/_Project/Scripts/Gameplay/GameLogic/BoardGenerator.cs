@@ -15,7 +15,7 @@ public class BoardGenerator
 
         _itemFactory = _fruitFactory;
     }
-    public GameTile[,] GenerateBoard(int width, int height)
+    public GameTile[,] GenerateBoard(int width, int height, Vector3 offset)
     {
         GameTile[,] gameTiles = new GameTile[width, height];
 
@@ -23,7 +23,7 @@ public class BoardGenerator
         {
             for (int j = 0; j < height; j++)
             {
-                Item item = _itemFactory.Create(new Vector3(i, j, -0.5f), gameTiles);
+                Item item = _itemFactory.Create(new Vector3(i, j, 0) + offset, gameTiles);
 
                 GameTile gameTile = Object.Instantiate(_gameTilePrefab, new Vector3(i, j, 0), Quaternion.identity);
                 item.SetTile(gameTile);
