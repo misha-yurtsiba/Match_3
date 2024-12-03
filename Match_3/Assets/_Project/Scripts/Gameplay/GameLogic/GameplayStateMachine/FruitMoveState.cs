@@ -1,60 +1,57 @@
-using System.Collections;
-using System.Threading.Tasks;
+using System;
+using System.Threading;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
-public class FruitMoveState : GameState
+public class FruitMoveState : GameState 
 {
+    private readonly SwipeHandler _swipeHandler;
     private readonly FruitMover _fruitMover;
     private readonly MatchCheker _matchCheker;
     private readonly GameplayStateMachine _gameplayStateMachine;
     private readonly GameBoard _gameBoard;
+    private readonly FruitSpawner _fruitSpawner;
 
     private Dictionary<Fruit, GameTile> _movedFruits = new Dictionary<Fruit, GameTile>();
+    private List<UniTask> _destroyedFruits = new List<UniTask>();
 
-    private float _moveSpeed = 10;
-    private bool _isMoving = false;
-
-    public FruitMoveState(FruitMover fruitMover, GameplayStateMachine gameplayStateMachine, MatchCheker matchCheker, GameBoard gameBoard)
+    private CancellationTokenSource cts;
+    public FruitMoveState(
+        SwipeHandler swipeHandler,
+        GameplayStateMachine gameplayStateMachine,
+        MatchCheker matchCheker,
+        GameBoard gameBoard,
+        FruitMover fruitMover,
+        FruitSpawner fruitSpawner)
     {
-        _fruitMover = fruitMover;
+        _swipeHandler = swipeHandler;
         _gameplayStateMachine = gameplayStateMachine;
         _matchCheker = matchCheker;
         _gameBoard = gameBoard;
+        _fruitMover = fruitMover;
+        _fruitSpawner = fruitSpawner;
+
+        cts = new CancellationTokenSource();
+
+        Application.quitting += () =>
+        {
+            Debug.Log("Cancel");
+            cts.Cancel();
+            cts.Dispose();
+        };
     }
 
-    public override void Enter()
+    public async override void Enter()
     {
-        MoveFruits(_fruitMover.movingFruit[0], _fruitMover.movingFruit[1]);
+        await _fruitMover.SwapFruitsAsync(_swipeHandler.movingFruit[0], _swipeHandler.movingFruit[1],cts.Token);
+        CheckMatch();
     }
 
     public override void Update()
     {
-        if (!_isMoving) return;
 
-        if(_movedFruits.Count == 0)
-        {
-            _isMoving = false;
-            CheckMatch();
-            return;
-        }
-
-        foreach (KeyValuePair<Fruit, GameTile> pair in _movedFruits)
-        {
-            Fruit fruit = pair.Key;
-            GameTile tile = pair.Value;
-
-            if(fruit.transform.position == tile.transform.position + _gameBoard.itemOffset)
-            {
-                _movedFruits.Clear();
-                break;
-            }
-            else
-            {
-                fruit.transform.position = Vector3.MoveTowards(fruit.transform.position, tile.transform.position + _gameBoard.itemOffset, _moveSpeed * Time.deltaTime);
-            }
-        }
     }
 
     public override void Exit()
@@ -62,25 +59,11 @@ public class FruitMoveState : GameState
         
     }
 
-    private void MoveFruits(Fruit fruit1, Fruit fruit2)
-    {
-        GameTile gameTile1 = fruit1.CurentTile;
-        GameTile gameTile2 = fruit2.CurentTile;
-
-        fruit1.transform.DOMove(gameTile2.transform.position + _gameBoard.itemOffset,0.2f);
-        fruit1.SetTile(gameTile2);
-        gameTile2.curentItem = fruit1;
-
-        fruit2.transform.DOMove(gameTile1.transform.position + _gameBoard.itemOffset, 0.2f)
-            .OnComplete(() => CheckMatch());
-
-        fruit2.SetTile(gameTile1);
-        gameTile1.curentItem = fruit2;
-    }
-
     private async void CheckMatch()
     {
         _movedFruits.Clear();
+        _destroyedFruits.Clear();
+
         List<Fruit> fruits = _matchCheker.FindMatch();
 
         if(fruits.Count == 0)
@@ -92,17 +75,27 @@ public class FruitMoveState : GameState
             foreach (Fruit fruit in fruits)
             {
                 fruit.CurentTile.curentItem = null;
-                fruit.transform
-                    .DOScale(Vector3.zero, 0.2f)
-                    .OnComplete(() => Object.Destroy(fruit.gameObject));
+                _destroyedFruits.Add(DestroyFruitAsync(fruit));
+
+                await UniTask.DelayFrame(2);
             }
 
-            await Task.Delay(200);
+            await UniTask.WhenAll(_destroyedFruits);
+
             RestoreBoard();
         }
     }
 
-    private void RestoreBoard()
+    private async UniTask DestroyFruitAsync(Fruit fruit)
+    {
+        Tween tween = fruit.transform.DOScale(Vector3.zero, 0.2f);
+
+        await tween.AsyncWaitForCompletion();
+
+        UnityEngine.Object.Destroy(fruit.gameObject);
+    }
+
+    private async UniTaskVoid RestoreBoard()
     {
         int nullCount = 0;
 
@@ -117,15 +110,21 @@ public class FruitMoveState : GameState
                 else
                 {
                     if(nullCount > 0)
-                        MoveOneFruit(_gameBoard.GetTile(i, j).curentItem as Fruit, i, j - nullCount);
+                    {
+                        SelectMovingFruit(_gameBoard.GetTile(i, j).curentItem as Fruit, i, j - nullCount);
+                    }
                 }
             }
             nullCount = 0;
         }
-        _isMoving = true;
+
+        await _fruitMover.MoveFruitDown(_movedFruits, 0.7f,cts.Token);
+        await _fruitSpawner.SpawnDeletedFruits(cts.Token);
+
+        CheckMatch();
     }
 
-    private void MoveOneFruit(Fruit fruit, int x, int y)
+    private void SelectMovingFruit(Fruit fruit, int x, int y)
     {
         GameTile tile = _gameBoard.GetTile(x, y);
         fruit.CurentTile.curentItem = null;

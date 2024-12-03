@@ -1,78 +1,59 @@
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Threading;
 
 public class FruitMover
 {
-    public Fruit[] movingFruit;
-
-    private readonly InputHandler _inputHandler;
     private readonly GameBoard _gameBoard;
-    private readonly GameplayStateMachine _gameplayStateMachine;
-    private readonly Camera _camera;
 
-    private GameTile _startGameTile;
+    private List<UniTask> _tasks;
 
-    public FruitMover(InputHandler inputHandler, GameBoard gameBoard, GameplayStateMachine gameplayStateMachine)
+    public FruitMover(GameBoard gameBoard)
     {
-        _inputHandler = inputHandler;
         _gameBoard = gameBoard;
-        _gameplayStateMachine = gameplayStateMachine;
 
-        _camera = Camera.main;
-        _inputHandler.startSwipe += StartSwipe;
-        _inputHandler.onSwipe += EndSwipe;
-        movingFruit = new Fruit[2];
+        _tasks = new List<UniTask>();
+    }
+    public async UniTask SwapFruitsAsync(Fruit fruit1, Fruit fruit2, CancellationToken cancellationToken)
+    {
+        _tasks.Clear();
+
+        GameTile gameTile1 = fruit1.CurentTile;
+        GameTile gameTile2 = fruit2.CurentTile;
+
+        fruit1.SetTile(gameTile2);
+        gameTile2.curentItem = fruit1;
+
+        fruit2.SetTile(gameTile1);
+        gameTile1.curentItem = fruit2;
+
+        _tasks.Add(MoveOneFruit(fruit1, gameTile2.transform.position, 0.2f, cancellationToken));
+        _tasks.Add(MoveOneFruit(fruit2, gameTile1.transform.position, 0.2f, cancellationToken));
+
+        await UniTask.WhenAll(_tasks);
     }
 
-    public void Init()
+
+    public async UniTask MoveFruitDown(Dictionary<Fruit, GameTile> movedFruits, float spead,CancellationToken cancellationToken)
     {
+        _tasks.Clear();
+
+        foreach (KeyValuePair<Fruit, GameTile> pair in movedFruits)
+        {
+            _tasks.Add(MoveOneFruit(pair.Key, pair.Value.transform.position, spead, cancellationToken));
+        }
+        await UniTask.WhenAll(_tasks);
 
     }
 
-    private void StartSwipe(Vector2 startPosition)
+    private async UniTask MoveOneFruit(Fruit fruit, Vector3 position, float time, CancellationToken cancellationToken)
     {
-        Ray ray = _camera.ScreenPointToRay(startPosition);
-        RaycastHit raycastHit;
-
-        if(Physics.Raycast(ray,out raycastHit, 100) && raycastHit.transform.TryGetComponent(out GameTile gameTile))
+        for(float i = 0; i < 1; i += Time.deltaTime / time)
         {
-            Fruit fruit = gameTile.curentItem as Fruit;
-
-            _startGameTile = (fruit != null) ? gameTile : null;
+            fruit.transform.position = Vector3.Lerp(fruit.transform.position, position + _gameBoard.itemOffset, i);
+            await UniTask.Yield(cancellationToken);
         }
-    }
-
-    private void EndSwipe(Vector2Int swipeDirection)
-    {
-        if(_startGameTile == null) return;
-
-        if(swipeDirection == Vector2Int.up)
-        {
-            if(_startGameTile.yPos < _gameBoard.y - 1 && _gameBoard.GetTile(_startGameTile.xPos,_startGameTile.yPos + 1).curentItem is Fruit)
-                ChoseMovingFruit(Vector2Int.up);
-        }
-        else if(swipeDirection == Vector2Int.down)
-        {
-            if(_startGameTile.yPos > 0 && _gameBoard.GetTile(_startGameTile.xPos, _startGameTile.yPos - 1).curentItem is Fruit)
-                ChoseMovingFruit(Vector2Int.down);
-        }
-        else if(swipeDirection == Vector2Int.left)
-        {
-            if(_startGameTile.xPos > 0 && _gameBoard.GetTile(_startGameTile.xPos - 1, _startGameTile.yPos).curentItem is Fruit)
-                ChoseMovingFruit(Vector2Int.left);
-        }
-        else if(swipeDirection == Vector2Int.right)
-        {
-            if (_startGameTile.xPos < _gameBoard.x - 1 && _gameBoard.GetTile(_startGameTile.xPos + 1, _startGameTile.yPos).curentItem is Fruit)
-                ChoseMovingFruit(Vector2Int.right);
-        }
-    }
-
-    private void ChoseMovingFruit(Vector2Int direction)
-    {
-        movingFruit[0] = (Fruit)_startGameTile.curentItem;
-        movingFruit[1] = (Fruit)_gameBoard.GetTile(_startGameTile.xPos + direction.x, _startGameTile.yPos + direction.y).curentItem;
-        _gameplayStateMachine.EnterState<FruitMoveState>();
     }
 }

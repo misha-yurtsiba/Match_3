@@ -15,7 +15,11 @@ public class GameplayInstaller : MonoInstaller
 
         BindFactory();
 
+        BindSwipeHandler();
+
         BindFruitMover();
+
+        BindFruitSpawner();
 
         BindBoardGenerator();
 
@@ -49,10 +53,24 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle();
     }
 
+    private void BindSwipeHandler()
+    {
+        Container
+            .BindInterfacesAndSelfTo<SwipeHandler>()
+            .AsSingle();
+    }
+
     private void BindFruitMover()
     {
         Container
             .BindInterfacesAndSelfTo<FruitMover>()
+            .AsSingle();
+    }
+
+    private void BindFruitSpawner()
+    {
+        Container
+            .BindInterfacesAndSelfTo<FruitSpawner>()
             .AsSingle();
     }
 

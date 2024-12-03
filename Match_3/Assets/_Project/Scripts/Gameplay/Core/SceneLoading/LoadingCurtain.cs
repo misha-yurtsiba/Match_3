@@ -1,9 +1,9 @@
-using System.Collections;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
+
 
 public class LoadingCurtain : MonoBehaviour
 {
@@ -13,11 +13,12 @@ public class LoadingCurtain : MonoBehaviour
     {
         _loadCurtain.gameObject.SetActive(true);
     }
-    public void ActiveLoadingCurtain(Action callback)
+    public async UniTask ActiveLoadingCurtain()
     {
         _loadCurtain.gameObject.SetActive(true);
-        _loadCurtain.DOFade(1,1)
-            .OnComplete(() => callback?.Invoke());
+        Tween tween = _loadCurtain.DOFade(1, 1);
+
+        await tween.AsyncWaitForCompletion();
     }
 
     public void DisactiveLoadingCurtain(Action callback)

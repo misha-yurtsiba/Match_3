@@ -1,9 +1,6 @@
-using System.Collections;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public class LoadingSceneState : IState
 {
@@ -17,10 +14,10 @@ public class LoadingSceneState : IState
         _loadindCurtain = loadindCurtain;
         _stateMachine = stateMachine;
     }
-    public void Enter()
+    public async void Enter()
     {
-        _loadindCurtain.ActiveLoadingCurtain(ChangeScene);
-        Debug.Log("Enter");
+        await _loadindCurtain.ActiveLoadingCurtain();
+        await ChangeScene();
     }
 
     public void Exit()
@@ -28,15 +25,11 @@ public class LoadingSceneState : IState
 
     }
 
-    private async void ChangeScene()
+    private async UniTask ChangeScene()
     {
-        _loadingAsyncOperation = SceneManager.LoadSceneAsync(SceneChanger.sceneToChange.ToString());
+        _loadingAsyncOperation =  SceneManager.LoadSceneAsync(SceneChanger.sceneToChange.ToString());
 
-        do
-        {
-            await Task.Delay(25);
-        }
-        while (!_loadingAsyncOperation.isDone);
+        await _loadingAsyncOperation;
 
         _loadindCurtain.DisactiveLoadingCurtain(() =>
         {
