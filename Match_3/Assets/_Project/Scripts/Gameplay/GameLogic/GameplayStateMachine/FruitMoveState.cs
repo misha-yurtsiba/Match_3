@@ -75,7 +75,7 @@ public class FruitMoveState : GameState
             foreach (Fruit fruit in fruits)
             {
                 fruit.CurentTile.curentItem = null;
-                _destroyedFruits.Add(DestroyFruitAsync(fruit));
+                _destroyedFruits.Add(fruit.DestroyItemAsync());
 
                 await UniTask.DelayFrame(2);
             }
@@ -84,15 +84,6 @@ public class FruitMoveState : GameState
 
             RestoreBoard();
         }
-    }
-
-    private async UniTask DestroyFruitAsync(Fruit fruit)
-    {
-        Tween tween = fruit.transform.DOScale(Vector3.zero, 0.2f);
-
-        await tween.AsyncWaitForCompletion();
-
-        UnityEngine.Object.Destroy(fruit.gameObject);
     }
 
     private async UniTaskVoid RestoreBoard()

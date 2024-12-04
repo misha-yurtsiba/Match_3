@@ -32,26 +32,26 @@ public class FruitFactory : ItemFactory
             if (x == 0 || x== 1) return false;
 
             Fruit fruit = gameTiles[x - 2, y].curentItem as Fruit;
-            if (fruit != null && fruit.Index != index) return false;
+            if ((fruit == null) || (fruit != null && fruit.Index != index)) return false;
         }
         else
         {
             if (x == 0)
             {
                 Fruit fruit = gameTiles[x, y - 2].curentItem as Fruit;
-                if (fruit != null && fruit.Index != index) return false;
+                if ((fruit == null) || (fruit != null && fruit.Index != index)) return false;
             }
             else if(x == 1)
             {
                 Fruit fruit = gameTiles[x, y - 2].curentItem as Fruit;
-                if (fruit != null && fruit.Index != index) return false;
+                if ((fruit == null) || (fruit != null && fruit.Index != index)) return false;
             }
             else
             {
                 Fruit fruitLeft = gameTiles[x - 2, y].curentItem as Fruit;
                 Fruit fruitDown = gameTiles[x, y - 2].curentItem as Fruit;
 
-                if (fruitLeft != null && fruitDown != null && fruitLeft.Index != index && fruitDown.Index != index) return false;
+                if (fruitLeft == null || fruitDown == null || (fruitLeft != null && fruitDown != null && fruitLeft.Index != index && fruitDown.Index != index)) return false;
             }
         }
         return true;

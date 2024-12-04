@@ -51,6 +51,10 @@ public class GameplayInstaller : MonoInstaller
         Container
             .BindInterfacesAndSelfTo<FruitFactory>()
             .AsSingle();
+
+        Container
+            .BindInterfacesAndSelfTo<ObstacleFactory>()
+            .AsSingle();
     }
 
     private void BindSwipeHandler()

@@ -12,7 +12,7 @@ public class SwipeHandler
     private readonly Camera _camera;
 
     private GameTile _startGameTile;
-
+    private bool _canSwipe;
     public SwipeHandler(InputHandler inputHandler, GameBoard gameBoard, GameplayStateMachine gameplayStateMachine)
     {
         _inputHandler = inputHandler;
@@ -32,6 +32,7 @@ public class SwipeHandler
 
     private void StartSwipe(Vector2 startPosition)
     {
+        _canSwipe = true;
         Ray ray = _camera.ScreenPointToRay(startPosition);
         RaycastHit raycastHit;
 
@@ -40,6 +41,10 @@ public class SwipeHandler
             Fruit fruit = gameTile.curentItem as Fruit;
 
             _startGameTile = (fruit != null) ? gameTile : null;
+        }
+        else
+        {
+            _canSwipe = false;
         }
     }
 
@@ -73,6 +78,6 @@ public class SwipeHandler
     {
         movingFruit[0] = (Fruit)_startGameTile.curentItem;
         movingFruit[1] = (Fruit)_gameBoard.GetTile(_startGameTile.xPos + direction.x, _startGameTile.yPos + direction.y).curentItem;
-        _gameplayStateMachine.EnterState<FruitMoveState>();
+        if(_canSwipe) _gameplayStateMachine.EnterState<FruitMoveState>();
     }
 }
