@@ -12,10 +12,17 @@ public abstract class Item : MonoBehaviour
 
     virtual async public UniTask DestroyItemAsync()
     {
+        if(CurentTile.curentItem == null) return;
+        else _curentTile.curentItem = null;
         Tween tween = transform.DOScale(Vector3.zero, 0.2f);
-        await tween.AsyncWaitForCompletion();
+        await tween.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(gameObject.GetCancellationTokenOnDestroy());
 
         Destroy(gameObject);
+    }
+
+    virtual public void DestroyAction(GameBoard gameBoard)
+    {
+        
     }
 }
 

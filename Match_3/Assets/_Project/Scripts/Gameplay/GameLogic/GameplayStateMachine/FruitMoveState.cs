@@ -74,15 +74,15 @@ public class FruitMoveState : GameState
         {
             foreach (Fruit fruit in fruits)
             {
-                fruit.CurentTile.curentItem = null;
+                fruit.DestroyAction(_gameBoard);
                 _destroyedFruits.Add(fruit.DestroyItemAsync());
 
                 await UniTask.DelayFrame(2);
             }
 
-            await UniTask.WhenAll(_destroyedFruits);
+            await UniTask.WhenAll(_destroyedFruits).AttachExternalCancellation(cts.Token);
 
-            RestoreBoard();
+            RestoreBoard().Forget();
         }
     }
 
@@ -100,16 +100,16 @@ public class FruitMoveState : GameState
                 }
                 else
                 {
-                    if(nullCount > 0)
+                    if(nullCount > 0 && _gameBoard.GetTile(i, j).curentItem is Fruit fruit)
                     {
-                        SelectMovingFruit(_gameBoard.GetTile(i, j).curentItem as Fruit, i, j - nullCount);
+                        SelectMovingFruit(fruit, i, j - nullCount);
                     }
                 }
             }
             nullCount = 0;
         }
 
-        await _fruitMover.MoveFruitDown(_movedFruits, 0.7f,cts.Token);
+        await _fruitMover.MoveFruitDown(_movedFruits, 5f,cts.Token);
         await _fruitSpawner.SpawnDeletedFruits(cts.Token);
 
         CheckMatch();

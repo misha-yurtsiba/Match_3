@@ -7,5 +7,5 @@ using DG.Tweening;
 
 public class Obstacle : Item
 {
-    
+
 }

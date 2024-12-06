@@ -54,6 +54,6 @@ public class FruitSpawner
 
         Tween tween = fruit.transform.DOScale(scale, 0.2f);
 
-        await tween.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(cancellationToken);
+        await tween.AsyncWaitForCompletion();
     }
 }

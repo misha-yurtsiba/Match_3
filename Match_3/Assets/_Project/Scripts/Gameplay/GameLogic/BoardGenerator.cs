@@ -7,14 +7,15 @@ public class BoardGenerator
     private readonly GameTile _gameTilePrefab;
     private readonly FruitFactory _fruitFactory;
     private readonly ObstacleFactory _obstacleFactory;
+    private readonly BonusFactory _bonusFactory;
 
     private ItemFactory _itemFactory;
-    public BoardGenerator(GameTile gameTilePrefab, FruitFactory fruitFactory, ObstacleFactory obstacleFactory)
+    public BoardGenerator(GameTile gameTilePrefab, FruitFactory fruitFactory, ObstacleFactory obstacleFactory, BonusFactory bonusFactory)
     {
         _gameTilePrefab = gameTilePrefab;
         _fruitFactory = fruitFactory;
         _obstacleFactory = obstacleFactory;
-
+        _bonusFactory = bonusFactory;
     }
     public GameTile[,] GenerateBoard(int width, int height, Vector3 offset)
     {
@@ -33,7 +34,17 @@ public class BoardGenerator
         {
             for (int j = 0; j < height; j++)
             {
-                SpawnOneItem(i,j,offset, gameTiles);
+                if(i == 4 && j == 4)
+                {
+                    _itemFactory = _bonusFactory;
+                    SpawnOneItem(i,j,offset, gameTiles);
+                    _itemFactory = _fruitFactory;
+                }
+                else
+                {
+                 SpawnOneItem(i,j,offset, gameTiles);
+
+                }
             }
         }
 

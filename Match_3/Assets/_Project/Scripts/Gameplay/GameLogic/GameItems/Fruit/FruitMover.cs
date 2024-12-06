@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Threading;
+using DG.Tweening;
 
 public class FruitMover
 {
@@ -10,6 +11,7 @@ public class FruitMover
 
     private List<UniTask> _tasks;
 
+    private Vector3 _fillingOffset = new Vector3(0, -0.3f, 0);
     public FruitMover(GameBoard gameBoard)
     {
         _gameBoard = gameBoard;
@@ -29,10 +31,10 @@ public class FruitMover
         fruit2.SetTile(gameTile1);
         gameTile1.curentItem = fruit2;
 
-        _tasks.Add(MoveOneFruit(fruit1, gameTile2.transform.position, 0.2f, cancellationToken));
-        _tasks.Add(MoveOneFruit(fruit2, gameTile1.transform.position, 0.2f, cancellationToken));
+        _tasks.Add(SwapOneFruit(fruit1, gameTile2.transform.position, 0.2f, cancellationToken));
+        _tasks.Add(SwapOneFruit(fruit2, gameTile1.transform.position, 0.2f, cancellationToken));
 
-        await UniTask.WhenAll(_tasks);
+        await UniTask.WhenAll(_tasks).AttachExternalCancellation(cancellationToken);
     }
 
 
@@ -44,11 +46,21 @@ public class FruitMover
         {
             _tasks.Add(MoveOneFruit(pair.Key, pair.Value.transform.position, spead, cancellationToken));
         }
-        await UniTask.WhenAll(_tasks);
+        await UniTask.WhenAll(_tasks).AttachExternalCancellation(cancellationToken);
 
     }
 
-    private async UniTask MoveOneFruit(Fruit fruit, Vector3 position, float time, CancellationToken cancellationToken)
+    private async UniTask MoveOneFruit(Fruit fruit, Vector3 position, float spead, CancellationToken cancellationToken)
+    {
+        Tween tween = fruit.transform.DOMove(position + _gameBoard.itemOffset + _fillingOffset, spead * 2).SetSpeedBased().SetEase(Ease.InQuad);
+        await tween.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(cancellationToken);
+
+        tween = fruit.transform.DOMove(position + _gameBoard.itemOffset, spead * 2).SetSpeedBased().SetEase(Ease.Linear);
+        UniTask uniTask = tween.AsyncWaitForCompletion().AsUniTask();
+        await uniTask.AttachExternalCancellation(cancellationToken);
+    }
+
+    private async UniTask SwapOneFruit(Fruit fruit, Vector3 position, float time, CancellationToken cancellationToken)
     {
         for(float i = 0; i < 1; i += Time.deltaTime / time)
         {
@@ -56,4 +68,5 @@ public class FruitMover
             await UniTask.Yield(cancellationToken);
         }
     }
+
 }
