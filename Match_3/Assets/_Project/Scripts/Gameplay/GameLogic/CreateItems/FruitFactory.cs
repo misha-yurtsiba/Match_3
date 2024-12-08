@@ -6,10 +6,12 @@ using Zenject;
 public class FruitFactory : ItemFactory
 {
     private readonly FruitsPrefabs _fruitsPrefabs;
+    private readonly ItemDestroyer _itemDestroyer;
 
-    public FruitFactory(FruitsPrefabs fruitsPrefabs)
+    public FruitFactory(FruitsPrefabs fruitsPrefabs, ItemDestroyer itemDestroyer)
     {
         _fruitsPrefabs = fruitsPrefabs;
+        _itemDestroyer = itemDestroyer;
     }
 
     public override Item Create(Vector3 position, GameTile [,] gameTiles)
@@ -22,7 +24,10 @@ public class FruitFactory : ItemFactory
         }
         while (CheckNaighbor((int)position.x, (int)position.y, randomIndex, gameTiles));
 
-        return Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], position, Quaternion.identity);
+        Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], position, Quaternion.identity);
+        fruit.Init(_itemDestroyer);
+
+        return fruit;
     }
 
     private bool CheckNaighbor(int x, int y,int index, GameTile[,] gameTiles)

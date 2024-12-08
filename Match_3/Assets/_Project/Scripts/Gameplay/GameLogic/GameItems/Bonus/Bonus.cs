@@ -1,44 +1,46 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyNeighborSreategy : BonusStrategy
+public class DestroyLineAndColumnStrategy : BonusStrategy
 {
-    private readonly List<Vector2Int> _directions;
-    public DestroyNeighborSreategy()
+    private readonly ItemDestroyer _itemDestroyer;
+
+    public DestroyLineAndColumnStrategy(ItemDestroyer itemDestroyer)
     {
-        _directions = new List<Vector2Int>()
-        {
-            Vector2Int.down,
-            Vector2Int.up,
-            Vector2Int.right,
-            Vector2Int.left,
-            new Vector2Int(1, 1),
-            new Vector2Int(-1, -1),
-            new Vector2Int(1, -1),
-            new Vector2Int(-1, 1)
-        };
+        _itemDestroyer = itemDestroyer;
     }
     public override async UniTaskVoid Execute(GameBoard gameBoard, Item item)
     {
-        foreach (Vector2Int direction in _directions)
+        for (int i = 1; i < Mathf.Max(gameBoard.x,gameBoard.y); i++)
         {
-            int newX = item.CurentTile.xPos + direction.x;
-            int newY = item.CurentTile.yPos + direction.y;
+            int x = item.CurentTile.xPos;
 
-            if (newX >= 0 && newX < gameBoard.x && newY >= 0 && newY < gameBoard.y && (gameBoard._board[newX, newY].curentItem is Item item1))
-            {
-                item1?.DestroyItemAsync().Forget();
-                await UniTask.DelayFrame(2, cancellationToken: item1.GetCancellationTokenOnDestroy());
-            }
+            if (x + i < gameBoard.x)
+                _itemDestroyer.DestroyOneItem(gameBoard._board[x + i, item.CurentTile.yPos].curentItem);
+
+            if (x - i >= 0)
+                _itemDestroyer.DestroyOneItem(gameBoard._board[x - i, item.CurentTile.yPos].curentItem);
+
+            if (x + i < gameBoard.x)
+                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, x + i].curentItem);
+
+            if (x - i >= 0)
+                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, x - i].curentItem);
+
+            await UniTask.DelayFrame(1, cancellationToken: item.GetCancellationTokenOnDestroy());
         }
     }
 }
-public class Bonus : Item
+public class Bonus : Item, IMoveble
 {
     private BonusStrategy _bonusStrategy;
-    public void Init(BonusStrategy bonusStrategy)
+    public Transform Transform
+    {
+        get => transform;
+        set => transform.position = value.position;
+    }
+    public void SetBonus(BonusStrategy bonusStrategy)
     {
         _bonusStrategy = bonusStrategy;
     }
@@ -47,7 +49,6 @@ public class Bonus : Item
     {
         _bonusStrategy.Execute(gameBoard,this);
 
-        DestroyItemAsync().Forget();
+        _itemDestroyer.DestroyOneItem(this);
     }
-
 }

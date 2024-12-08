@@ -13,8 +13,9 @@ public class FruitMoveState : GameState
     private readonly GameplayStateMachine _gameplayStateMachine;
     private readonly GameBoard _gameBoard;
     private readonly FruitSpawner _fruitSpawner;
+    private readonly ItemDestroyer _itemDestroyer;
 
-    private Dictionary<Fruit, GameTile> _movedFruits = new Dictionary<Fruit, GameTile>();
+    private Dictionary<IMoveble, GameTile> _movedFruits = new Dictionary<IMoveble, GameTile>();
     private List<UniTask> _destroyedFruits = new List<UniTask>();
 
     private CancellationTokenSource cts;
@@ -24,7 +25,9 @@ public class FruitMoveState : GameState
         MatchCheker matchCheker,
         GameBoard gameBoard,
         FruitMover fruitMover,
-        FruitSpawner fruitSpawner)
+        FruitSpawner fruitSpawner,
+        ItemDestroyer itemDestroyer
+        )
     {
         _swipeHandler = swipeHandler;
         _gameplayStateMachine = gameplayStateMachine;
@@ -32,6 +35,7 @@ public class FruitMoveState : GameState
         _gameBoard = gameBoard;
         _fruitMover = fruitMover;
         _fruitSpawner = fruitSpawner;
+        _itemDestroyer = itemDestroyer;
 
         cts = new CancellationTokenSource();
 
@@ -75,12 +79,12 @@ public class FruitMoveState : GameState
             foreach (Fruit fruit in fruits)
             {
                 fruit.DestroyAction(_gameBoard);
-                _destroyedFruits.Add(fruit.DestroyItemAsync());
-
+                _itemDestroyer.DestroyOneItem(fruit);
+                
                 await UniTask.DelayFrame(2);
             }
 
-            await UniTask.WhenAll(_destroyedFruits).AttachExternalCancellation(cts.Token);
+            await _itemDestroyer.DestroyItemsAsync(cts.Token);
 
             RestoreBoard().Forget();
         }
@@ -100,9 +104,13 @@ public class FruitMoveState : GameState
                 }
                 else
                 {
-                    if(nullCount > 0 && _gameBoard.GetTile(i, j).curentItem is Fruit fruit)
+                    if(nullCount > 0 && _gameBoard.GetTile(i, j).curentItem is IMoveble moveble)
                     {
-                        SelectMovingFruit(fruit, i, j - nullCount);
+                        SelectMovingFruit(moveble, i, j - nullCount);
+                    }
+                    else
+                    {
+                        nullCount = 0;
                     }
                 }
             }
@@ -115,12 +123,16 @@ public class FruitMoveState : GameState
         CheckMatch();
     }
 
-    private void SelectMovingFruit(Fruit fruit, int x, int y)
+    private void SelectMovingFruit(IMoveble moveble, int x, int y)
     {
-        GameTile tile = _gameBoard.GetTile(x, y);
-        fruit.CurentTile.curentItem = null;
-        tile.curentItem = fruit;
-        fruit.SetTile(tile);
-        _movedFruits.Add(fruit, tile);
+        if(moveble is Item item)
+        {
+            GameTile tile = _gameBoard.GetTile(x, y);
+            item.CurentTile.curentItem = null;
+            tile.curentItem = item;
+            item.SetTile(tile);
+
+            _movedFruits.Add(moveble, tile);
+        }
     }
 }

@@ -13,6 +13,8 @@ public class GameplayInstaller : MonoInstaller
     {
         BindGameTilePrefab();
 
+        BindItemDestroyer();
+
         BindFactory();
 
         BindSwipeHandler();
@@ -45,6 +47,13 @@ public class GameplayInstaller : MonoInstaller
             .FromInstance(_fruitsPrefabs)
             .AsSingle()
             .NonLazy();
+    }
+
+    private void BindItemDestroyer()
+    {
+        Container
+            .BindInterfacesAndSelfTo<ItemDestroyer>()
+            .AsSingle();
     }
     private void BindFactory()
     {

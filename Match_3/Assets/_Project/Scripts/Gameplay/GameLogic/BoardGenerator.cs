@@ -42,8 +42,7 @@ public class BoardGenerator
                 }
                 else
                 {
-                 SpawnOneItem(i,j,offset, gameTiles);
-
+                    SpawnOneItem(i,j,offset, gameTiles);
                 }
             }
         }

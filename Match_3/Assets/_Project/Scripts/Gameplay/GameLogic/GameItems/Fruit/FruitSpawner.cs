@@ -8,15 +8,19 @@ using DG.Tweening;
 public class FruitSpawner
 {
     private readonly ItemFactory _itemFactory;
+    private readonly BonusFactory _bonusFactory;
     private readonly GameBoard _gameBoard;
 
     private List<GameTile> _emptyTiles = new List<GameTile>();
     private List<UniTask> _tasks = new List<UniTask>();
 
-    public FruitSpawner(FruitFactory fruitFactory, GameBoard gameBoard)
+    private float _spawnChance = 0.025f;
+
+    public FruitSpawner(FruitFactory fruitFactory, GameBoard gameBoard, BonusFactory bonusFactory)
     {
         _itemFactory = fruitFactory;
         _gameBoard = gameBoard;
+        _bonusFactory = bonusFactory;
     }
 
     public async UniTask SpawnDeletedFruits(CancellationToken token)
@@ -35,7 +39,14 @@ public class FruitSpawner
 
         foreach (GameTile gameTile in _emptyTiles)
         {
-            Item item = _itemFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board);
+            Item item;
+            float randomNum = Random.value;
+
+            if(1 - _spawnChance <= randomNum)
+                item = _bonusFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board);
+            else
+                item = _itemFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board);
+
             gameTile.curentItem = item;
             item.SetTile(gameTile);
 

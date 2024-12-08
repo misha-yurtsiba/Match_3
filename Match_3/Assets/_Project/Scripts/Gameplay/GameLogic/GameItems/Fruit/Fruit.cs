@@ -4,21 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Fruit : Item
+public class Fruit : Item, IMoveble
 {
     [SerializeField] private int _index;
 
     public bool isMatched = false;
     public int Index => _index;
 
+    public Transform Transform
+    {
+        get =>  transform; 
+        set =>  transform.position = value.position; 
+    }
     override public void DestroyAction(GameBoard gameBoard)
     {
         IEnumerable obstacles = CheckNeibghorTiles(gameBoard._board);
 
-        foreach (Item obstacle in obstacles)
+        foreach (Item item in obstacles)
         {
-            if(obstacle is Bonus bonus) bonus.DestroyAction(gameBoard);
-            else obstacle.DestroyItemAsync().Forget();
+            if(item is Obstacle obstacle)
+                _itemDestroyer.DestroyOneItem(obstacle);
+
+            if(item is Bonus bonus)
+                bonus.DestroyAction(gameBoard);
         } 
     }
 

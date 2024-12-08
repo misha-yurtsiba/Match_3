@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-
 public abstract class Item : MonoBehaviour
 {
     private GameTile _curentTile;
     public GameTile CurentTile => _curentTile;
+
+    protected ItemDestroyer _itemDestroyer;
+
+    public void Init(ItemDestroyer itemDestroyer)
+    {
+        _itemDestroyer = itemDestroyer;
+    }
     public void SetTile(GameTile newTile) => _curentTile = newTile;
 
     virtual async public UniTask DestroyItemAsync()
@@ -20,9 +26,6 @@ public abstract class Item : MonoBehaviour
         Destroy(gameObject);
     }
 
-    virtual public void DestroyAction(GameBoard gameBoard)
-    {
-        
-    }
+    virtual public void DestroyAction(GameBoard gameBoard) { }
 }
 

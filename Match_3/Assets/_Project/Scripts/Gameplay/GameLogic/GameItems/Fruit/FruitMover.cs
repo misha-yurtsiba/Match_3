@@ -37,12 +37,11 @@ public class FruitMover
         await UniTask.WhenAll(_tasks).AttachExternalCancellation(cancellationToken);
     }
 
-
-    public async UniTask MoveFruitDown(Dictionary<Fruit, GameTile> movedFruits, float spead,CancellationToken cancellationToken)
+    public async UniTask MoveFruitDown(Dictionary<IMoveble, GameTile> movedFruits, float spead,CancellationToken cancellationToken)
     {
         _tasks.Clear();
 
-        foreach (KeyValuePair<Fruit, GameTile> pair in movedFruits)
+        foreach (KeyValuePair<IMoveble, GameTile> pair in movedFruits)
         {
             _tasks.Add(MoveOneFruit(pair.Key, pair.Value.transform.position, spead, cancellationToken));
         }
@@ -50,12 +49,12 @@ public class FruitMover
 
     }
 
-    private async UniTask MoveOneFruit(Fruit fruit, Vector3 position, float spead, CancellationToken cancellationToken)
+    private async UniTask MoveOneFruit(IMoveble fruit, Vector3 position, float spead, CancellationToken cancellationToken)
     {
-        Tween tween = fruit.transform.DOMove(position + _gameBoard.itemOffset + _fillingOffset, spead * 2).SetSpeedBased().SetEase(Ease.InQuad);
+        Tween tween = fruit.Transform.DOMove(position + _gameBoard.itemOffset + _fillingOffset, spead * 2).SetSpeedBased().SetEase(Ease.InQuad);
         await tween.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(cancellationToken);
-
-        tween = fruit.transform.DOMove(position + _gameBoard.itemOffset, spead * 2).SetSpeedBased().SetEase(Ease.Linear);
+        
+        tween = fruit.Transform.DOMove(position + _gameBoard.itemOffset, spead * 2).SetSpeedBased().SetEase(Ease.Linear);
         UniTask uniTask = tween.AsyncWaitForCompletion().AsUniTask();
         await uniTask.AttachExternalCancellation(cancellationToken);
     }
@@ -68,5 +67,4 @@ public class FruitMover
             await UniTask.Yield(cancellationToken);
         }
     }
-
 }
