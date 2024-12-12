@@ -6,7 +6,7 @@ using Zenject;
 public class MenuEntryPoint : MonoBehaviour
 {
     private MainMenuUIController _mainMenuUIController;
-
+ 
     [Inject]
     private void Construct(MainMenuUIController mainMenuUIController)
     {
@@ -15,5 +15,6 @@ public class MenuEntryPoint : MonoBehaviour
     private void Start()
     {
         _mainMenuUIController.ActiveMenuPanel();
+        
     }
 }

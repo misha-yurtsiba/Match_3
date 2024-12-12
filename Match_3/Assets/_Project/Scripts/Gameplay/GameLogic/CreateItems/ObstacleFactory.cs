@@ -13,10 +13,10 @@ public class ObstacleFactory : ItemFactory
         _obstaclePrefab = Resources.Load<Obstacle>("Box");
     }
 
-    public override Item Create(Vector3 position, GameTile[,] gameTiles)
+    public override Item Create(Vector3 position, GameTile[,] gameTiles,int index)
     {
         Obstacle obstacle = Object.Instantiate(_obstaclePrefab, position, Quaternion.identity);
-        obstacle.Init(_itemDestroyer);
+        obstacle.Init(_itemDestroyer,ItemType.Obstacle);
 
         return obstacle;
     }

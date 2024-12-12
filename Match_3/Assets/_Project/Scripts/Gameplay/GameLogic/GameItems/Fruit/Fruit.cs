@@ -6,10 +6,7 @@ using DG.Tweening;
 
 public class Fruit : Item, IMoveble
 {
-    [SerializeField] private int _index;
-
     public bool isMatched = false;
-    public int Index => _index;
 
     public Transform Transform
     {

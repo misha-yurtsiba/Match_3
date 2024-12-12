@@ -14,19 +14,17 @@ public class BonusFactory : ItemFactory
 
         _bonusStrategies = new List<BonusStrategy>()
         {
-            new DestroyColumnStrategy(),
-            new DestroyLineStrategy(),
-            //new DestroyLineAndColumnStrategy(),
-            new DestroyNeighborSreategy()
+            new DestroyColumnStrategy(_itemDestroyer),
+            new DestroyLineStrategy(_itemDestroyer),
+            new DestroyLineAndColumnStrategy(_itemDestroyer),
+            new DestroyNeighborSreategy(_itemDestroyer)
         };
     }
-    public override Item Create(Vector3 position, GameTile[,] gameTiles)
+    public override Item Create(Vector3 position, GameTile[,] gameTiles,int index)
     {
-        Bonus bonus = Object.Instantiate(_bonusPrefabs.prefabs[0],position,Quaternion.identity);
-        //bonus.Init(_bonusStrategies[Random.Range(0,_bonusStrategies.Count)]);
-        
-        bonus.SetBonus(new DestroyLineAndColumnStrategy(_itemDestroyer));
-        bonus.Init(_itemDestroyer);
+        Bonus bonus = Object.Instantiate(_bonusPrefabs.prefabs[index],position,Quaternion.identity);
+        bonus.SetBonus(_bonusStrategies[Random.Range(0, _bonusStrategies.Count)]);
+        bonus.Init(_itemDestroyer,ItemType.Bonus);
         
         return bonus;
     }

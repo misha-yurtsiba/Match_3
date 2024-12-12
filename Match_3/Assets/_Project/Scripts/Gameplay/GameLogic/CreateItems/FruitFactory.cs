@@ -14,21 +14,31 @@ public class FruitFactory : ItemFactory
         _itemDestroyer = itemDestroyer;
     }
 
-    public override Item Create(Vector3 position, GameTile [,] gameTiles)
+    public override Item Create(Vector3 position, GameTile [,] gameTiles,int index)
     {
-        int randomIndex;
-
-        do
+        if(index < 0)
         {
-            randomIndex = Random.Range(0, _fruitsPrefabs.prefabList.Count);
+            int randomIndex;
+
+            do
+            {
+                randomIndex = Random.Range(0, _fruitsPrefabs.prefabList.Count);
+            }
+            while (CheckNaighbor((int)position.x, (int)position.y, randomIndex, gameTiles));
+            Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], position, Quaternion.identity);
+            fruit.Init(_itemDestroyer, ItemType.Fruit);
+
+            return fruit;
         }
-        while (CheckNaighbor((int)position.x, (int)position.y, randomIndex, gameTiles));
+        else
+        {
+            Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[index], position, Quaternion.identity);
+            fruit.Init(_itemDestroyer, ItemType.Fruit);
 
-        Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], position, Quaternion.identity);
-        fruit.Init(_itemDestroyer);
-
-        return fruit;
+            return fruit;
+        }
     }
+
 
     private bool CheckNaighbor(int x, int y,int index, GameTile[,] gameTiles)
     {

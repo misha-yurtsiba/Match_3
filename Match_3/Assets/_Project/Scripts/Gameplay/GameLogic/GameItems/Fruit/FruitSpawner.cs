@@ -43,9 +43,9 @@ public class FruitSpawner
             float randomNum = Random.value;
 
             if(1 - _spawnChance <= randomNum)
-                item = _bonusFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board);
+                item = _bonusFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board, 0);
             else
-                item = _itemFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board);
+                item = _itemFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board, -1);
 
             gameTile.curentItem = item;
             item.SetTile(gameTile);

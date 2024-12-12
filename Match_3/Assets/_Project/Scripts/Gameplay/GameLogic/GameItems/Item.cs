@@ -5,14 +5,20 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 public abstract class Item : MonoBehaviour
 {
+    [SerializeField] private int _index;
+
+    public ItemType itemType;
+
     private GameTile _curentTile;
     public GameTile CurentTile => _curentTile;
+    public int Index => _index;
 
     protected ItemDestroyer _itemDestroyer;
 
-    public void Init(ItemDestroyer itemDestroyer)
+    public void Init(ItemDestroyer itemDestroyer, ItemType itemType)
     {
         _itemDestroyer = itemDestroyer;
+        this.itemType = itemType;
     }
     public void SetTile(GameTile newTile) => _curentTile = newTile;
 

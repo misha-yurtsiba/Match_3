@@ -2,6 +2,12 @@
 
 public class DestroyColumnStrategy : BonusStrategy
 {
+    private readonly ItemDestroyer _itemDestroyer;
+
+    public DestroyColumnStrategy(ItemDestroyer itemDestroyer)
+    {
+        _itemDestroyer = itemDestroyer;
+    }
     public override async UniTaskVoid Execute(GameBoard gameBoard, Item item)
     {
         for (int i = 1; i < gameBoard.y; i++)
@@ -9,10 +15,10 @@ public class DestroyColumnStrategy : BonusStrategy
             int y = item.CurentTile.yPos;
 
             if (y + i < gameBoard.x)
-                gameBoard._board[item.CurentTile.xPos, y + i].curentItem?.DestroyItemAsync().Forget();
+                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, y + i].curentItem);
 
             if (y - i >= 0)
-                gameBoard._board[item.CurentTile.xPos, y - i].curentItem?.DestroyItemAsync().Forget();
+                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, y - i].curentItem);
 
             await UniTask.DelayFrame(2, cancellationToken: item.GetCancellationTokenOnDestroy());
         }

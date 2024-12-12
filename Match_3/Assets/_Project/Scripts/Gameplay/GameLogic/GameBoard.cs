@@ -9,7 +9,6 @@ public class GameBoard
 
     public GameTile[,] _board;
 
-
     public int x;
     public int y;
 
@@ -22,7 +21,7 @@ public class GameBoard
     {
         x = 8;
         y = 8;
-        _board = _boardGenerator.GenerateBoard(x, y, itemOffset);
+        _board = _boardGenerator.GenerateBoardFromFile(SelectedLevel.Level,itemOffset);
     }
 
     public GameTile GetTile(int x, int y)

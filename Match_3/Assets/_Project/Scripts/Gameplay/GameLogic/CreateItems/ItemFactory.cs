@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class ItemFactory 
 {
-    public abstract Item Create(Vector3 position, GameTile[,] gameTiles);
+    public abstract Item Create(Vector3 position, GameTile[,] gameTiles,int index);
 }
