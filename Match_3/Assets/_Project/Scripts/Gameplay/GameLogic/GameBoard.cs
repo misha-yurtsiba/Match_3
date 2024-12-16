@@ -1,7 +1,39 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+public interface IItemProvider
+{
+    public int Count { get; }
+    public void AddItem(Item item);
+    public void RemoveItem(Item item);
 
+    public event Action<int> OnValueChanged;
+} 
+
+public class ObstecleProvider : IItemProvider
+{
+    private List<Item> _items = new List<Item>();
+
+    public event Action<int> OnValueChanged;
+
+    public int Count
+    {
+        get => _items.Count;
+    }
+
+    public void AddItem(Item item)
+    {
+        _items.Add(item);
+        OnValueChanged?.Invoke(_items.Count);
+    }
+
+    public void RemoveItem(Item item)
+    {
+        _items.Remove(item);
+        OnValueChanged?.Invoke(_items.Count);
+    }
+
+}
 public class GameBoard 
 {
     private readonly BoardGenerator _boardGenerator;
@@ -17,11 +49,11 @@ public class GameBoard
         _boardGenerator = boardGenerator;
     }
 
-    public void Init()
+    public void Init(LevelData levelData)
     {
-        x = 8;
-        y = 8;
-        _board = _boardGenerator.GenerateBoardFromFile(SelectedLevel.Level,itemOffset);
+        _board = _boardGenerator.GenerateBoardFromFile(levelData,itemOffset);
+        x = levelData.width;
+        y = levelData.height;
     }
 
     public GameTile GetTile(int x, int y)

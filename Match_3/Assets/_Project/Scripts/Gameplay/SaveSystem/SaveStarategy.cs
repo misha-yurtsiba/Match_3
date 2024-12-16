@@ -12,7 +12,12 @@ public abstract class SaveStarategy<TData>
 
 public class JsonSaveStrayegy : SaveStarategy<LevelData>
 {
-    private readonly string _saveDirectiry = Path.Combine(Application.persistentDataPath, "Level");
+    private readonly string _saveDirectiry;
+
+    public JsonSaveStrayegy(string saveDirectiry = "Assets/_Project/Resources/LevelData")
+    {
+        _saveDirectiry = saveDirectiry;
+    }
 
     public override LevelData Load(int level)
     {
@@ -28,7 +33,7 @@ public class JsonSaveStrayegy : SaveStarategy<LevelData>
 
     public override void Save(LevelData levelData)
     {
-        string path = Path.Combine("Assets/_Project/Resources", $"Level_{levelData.Level}.json");
+        string path = Path.Combine(_saveDirectiry, $"Level_{levelData.Level}.json");
 
         string json = JsonUtility.ToJson(levelData);
         

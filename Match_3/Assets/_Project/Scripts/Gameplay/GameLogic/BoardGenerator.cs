@@ -5,7 +5,6 @@ public class BoardGenerator
 {
     private readonly GameTile _gameTilePrefab;
 
-
     private readonly FruitFactory _fruitFactory;
     private readonly ObstacleFactory _obstacleFactory;
     private readonly BonusFactory _bonusFactory;
@@ -29,71 +28,8 @@ public class BoardGenerator
             { ItemType.Obstacle,obstacleFactory}
         };
     }
-    public GameTile[,] GenerateBoard(int width, int height, Vector3 offset)
+    public GameTile[,] GenerateBoardFromFile(LevelData levelData, Vector3 offset)
     {
-        GameTile[,] gameTiles = new GameTile[width, height];
-
-        _itemFactory = _obstacleFactory;
-
-        for(int i = 0; i < height; i++)
-        {
-            SpawnOneItem(0, i, offset, gameTiles);
-        }
-
-        _itemFactory = _fruitFactory;
-
-        for (int i = 1; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                if(i == 4 && j == 4)
-                {
-                    _itemFactory = _bonusFactory;
-                    SpawnOneItem(i,j,offset, gameTiles);
-                    _itemFactory = _fruitFactory;
-                }
-                else
-                {
-                    SpawnOneItem(i,j,offset, gameTiles);
-                }
-            }
-        }
-
-        LevelData levelData = new LevelData();
-        levelData.Level = 0;
-        levelData.width = width;
-        levelData.height = height;
-
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                levelData.itemData.Add(new ItemData(gameTiles[i,j].curentItem.itemType, gameTiles[i, j].curentItem.Index));
-            }
-        }
-        _saveStarategy.Save(levelData);
-
-        return gameTiles;
-    }
-
-    private void SpawnOneItem(int i, int j, Vector3 offset, GameTile[,] gameTiles)
-    {
-        Item item = _itemFactory.Create(new Vector3(i, j, 0) + offset, gameTiles,-1);
-
-        GameTile gameTile = Object.Instantiate(_gameTilePrefab, new Vector3(i, j, 0), Quaternion.identity);
-        item.SetTile(gameTile);
-
-        gameTile.curentItem = item;
-        gameTile.xPos = i;
-        gameTile.yPos = j;
-
-        gameTiles[i, j] = gameTile;
-    }
-
-
-    public GameTile[,] GenerateBoardFromFile(int level, Vector3 offset)
-    {
-        LevelData levelData = _saveStarategy.Load(level);
 
         int width = levelData.width;
         int height = levelData.height;

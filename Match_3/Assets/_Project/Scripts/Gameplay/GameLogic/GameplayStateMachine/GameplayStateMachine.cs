@@ -2,7 +2,6 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class GameplayStateMachine : MonoBehaviour 
 {
     private Dictionary<Type, GameState> _gameStates;
@@ -28,4 +27,6 @@ public class GameplayStateMachine : MonoBehaviour
     {
         _curentState?.Update();
     }
+
+    public Type GetCurentStateType() => _curentState.GetType();
 }

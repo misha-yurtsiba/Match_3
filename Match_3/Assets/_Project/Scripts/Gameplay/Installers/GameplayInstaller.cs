@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class GameplayInstaller : MonoInstaller 
+public class GameplayInstaller : MonoInstaller
 {
     [SerializeField] private GameplayStateMachine _gameplayStateMachine;
     [SerializeField] private GameTile _gameTilePrefab;
     [SerializeField] private InputHandler _inputHandler;
     [SerializeField] private FruitsPrefabs _fruitsPrefabs;
+    [SerializeField] private TimerController _timerController;
+    [SerializeField] private GameplayUIController _gameplayUIController;
     public override void InstallBindings()
     {
         BindGameTilePrefab();
 
         BindItemDestroyer();
+
+        BindCompleteLevel();
+
+        BindItemProviders();
 
         BindFactory();
 
@@ -30,6 +36,12 @@ public class GameplayInstaller : MonoInstaller
         BindMatchCheker();
 
         BindInputHandler();
+
+        BindGameOver();
+
+        BindTimerController();
+
+        BindGameplayUIController();
 
         BindGameplayStateMachine();
     }
@@ -53,6 +65,19 @@ public class GameplayInstaller : MonoInstaller
     {
         Container
             .BindInterfacesAndSelfTo<ItemDestroyer>()
+            .AsSingle();
+    }
+
+    private void BindCompleteLevel()
+    {
+        Container
+            .BindInterfacesAndSelfTo<CompleteLevel>()
+            .AsSingle();
+    }
+    private void BindItemProviders()
+    {
+        Container
+            .BindInterfacesAndSelfTo<ObstecleProvider>()
             .AsSingle();
     }
     private void BindFactory()
@@ -119,6 +144,28 @@ public class GameplayInstaller : MonoInstaller
             .FromInstance(_inputHandler)
             .AsSingle();
     }
+
+    private void BindGameOver()
+    {
+        Container
+            .BindInterfacesAndSelfTo<GameOver>()
+            .AsSingle();
+    }
+
+    private void BindTimerController()
+    {
+        Container
+            .BindInterfacesAndSelfTo<TimerController>()
+            .FromInstance(_timerController)
+            .AsSingle();
+    }
+    private void BindGameplayUIController()
+    {
+        Container
+            .BindInterfacesAndSelfTo<GameplayUIController>()
+            .FromInstance(_gameplayUIController)
+            .AsSingle();
+    }
     private void BindGameplayStateMachine()
     {
         Container
@@ -137,11 +184,25 @@ public class GameplayInstaller : MonoInstaller
             .AsSingle()
             .NonLazy();
 
+        Container
+            .BindInterfacesAndSelfTo<CompleteLevelState>()
+            .AsSingle()
+            .NonLazy();
+
+        Container
+            .BindInterfacesAndSelfTo<GameOverState>()
+            .AsSingle()
+            .NonLazy();
+
         PlayState playState = Container.Resolve<PlayState>();
         FruitMoveState FruitMoveState = Container.Resolve<FruitMoveState>();
+        CompleteLevelState GameOverState = Container.Resolve<CompleteLevelState>();
+        GameOverState gameOverState = Container.Resolve<GameOverState>();
 
         _gameplayStateMachine.Init();
         _gameplayStateMachine.AddState<PlayState>(playState);
         _gameplayStateMachine.AddState<FruitMoveState>(FruitMoveState);
+        _gameplayStateMachine.AddState<CompleteLevelState>(GameOverState);
+        _gameplayStateMachine.AddState<GameOverState>(gameOverState);
     }
 }

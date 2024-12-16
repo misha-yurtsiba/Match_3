@@ -1,133 +1,16 @@
 {
-  "height": 8,
+  "Level": 1,
+  "width": 5,
+  "height": 5,
+  "gameTime": 20,
   "itemData": [
     {
       "itemType": 2,
       "index": 0
     },
     {
-      "itemType": 1,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 4
-    },
-    {
-      "itemType": 2,
-      "index": 3
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 1
-    },
-    {
-      "itemType": 2,
-      "index": 4
-    },
-    {
-      "itemType": 2,
-      "index": 3
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 4
-    },
-    {
-      "itemType": 2,
-      "index": 1
-    },
-    {
-      "itemType": 2,
-      "index": 1
-    },
-    {
-      "itemType": 2,
-      "index": 1
-    },
-    {
-      "itemType": 2,
-      "index": 4
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 4
-    },
-    {
-      "itemType": 2,
-      "index": 3
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 2
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 3
-    },
-    {
-      "itemType": 2,
-      "index": 3
-    },
-    {
-      "itemType": 2,
-      "index": 0
-    },
-    {
-      "itemType": 2,
-      "index": 1
-    },
-    {
       "itemType": 0,
-      "index": 3
-    },
-    {
-      "itemType": 0,
-      "index": 2
+      "index": 1
     },
     {
       "itemType": 0,
@@ -139,19 +22,19 @@
     },
     {
       "itemType": 0,
+      "index": 2
+    },
+    {
+      "itemType": 2,
+      "index": 0
+    },
+    {
+      "itemType": 2,
       "index": 0
     },
     {
       "itemType": 0,
       "index": 1
-    },
-    {
-      "itemType": 1,
-      "index": 0
-    },
-    {
-      "itemType": 0,
-      "index": 0
     },
     {
       "itemType": 0,
@@ -159,27 +42,19 @@
     },
     {
       "itemType": 0,
-      "index": 2
+      "index": 0
     },
     {
-      "itemType": 0,
-      "index": 3
+      "itemType": 2,
+      "index": 0
     },
     {
-      "itemType": 0,
-      "index": 1
+      "itemType": 2,
+      "index": 0
     },
     {
-      "itemType": 0,
-      "index": 1
-    },
-    {
-      "itemType": 0,
-      "index": 4
-    },
-    {
-      "itemType": 0,
-      "index": 3
+      "itemType": 2,
+      "index": 0
     },
     {
       "itemType": 0,
@@ -187,55 +62,35 @@
     },
     {
       "itemType": 0,
+      "index": 1
+    },
+    {
+      "itemType": 2,
+      "index": 0
+    },
+    {
+      "itemType": 2,
+      "index": 0
+    },
+    {
+      "itemType": 0,
+      "index": 1
+    },
+    {
+      "itemType": 0,
       "index": 2
-    },
-    {
-      "itemType": 0,
-      "index": 4
-    },
-    {
-      "itemType": 0,
-      "index": 3
-    },
-    {
-      "itemType": 0,
-      "index": 1
-    },
-    {
-      "itemType": 0,
-      "index": 1
-    },
-    {
-      "itemType": 0,
-      "index": 3
-    },
-    {
-      "itemType": 0,
-      "index": 3
-    },
-    {
-      "itemType": 0,
-      "index": 4
-    },
-    {
-      "itemType": 0,
-      "index": 4
-    },
-    {
-      "itemType": 0,
-      "index": 1
-    },
-    {
-      "itemType": 0,
-      "index": 4
     },
     {
       "itemType": 0,
       "index": 0
     },
     {
-      "itemType": 0,
-      "index": 3
+      "itemType": 2,
+      "index": 0
+    },
+    {
+      "index": 1,
+      "itemType": 0
     },
     {
       "itemType": 0,
@@ -243,21 +98,11 @@
     },
     {
       "itemType": 0,
-      "index": 1
-    },
-    {
-      "itemType": 0,
-      "index": 4
-    },
-    {
-      "itemType": 0,
-      "index": 4
+      "index": 3
     },
     {
       "itemType": 0,
       "index": 2
     }
-  ],
-  "Level": 0,
-  "width": 8
+  ]
 }

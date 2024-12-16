@@ -64,6 +64,7 @@ public class FruitMover
         for(float i = 0; i < 1; i += Time.deltaTime / time)
         {
             fruit.transform.position = Vector3.Lerp(fruit.transform.position, position + _gameBoard.itemOffset, i);
+            if (cancellationToken.IsCancellationRequested) return;
             await UniTask.Yield(cancellationToken);
         }
     }

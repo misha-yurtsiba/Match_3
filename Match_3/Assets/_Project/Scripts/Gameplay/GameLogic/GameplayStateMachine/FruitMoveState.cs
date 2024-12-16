@@ -14,6 +14,8 @@ public class FruitMoveState : GameState
     private readonly GameBoard _gameBoard;
     private readonly FruitSpawner _fruitSpawner;
     private readonly ItemDestroyer _itemDestroyer;
+    private readonly CompleteLevel _completeLevel;
+    private readonly GameOver _gameOver;
 
     private Dictionary<IMoveble, GameTile> _movedFruits = new Dictionary<IMoveble, GameTile>();
     private List<UniTask> _destroyedFruits = new List<UniTask>();
@@ -26,7 +28,9 @@ public class FruitMoveState : GameState
         GameBoard gameBoard,
         FruitMover fruitMover,
         FruitSpawner fruitSpawner,
-        ItemDestroyer itemDestroyer
+        ItemDestroyer itemDestroyer,
+        CompleteLevel completeLevel,
+        GameOver gameOver
         )
     {
         _swipeHandler = swipeHandler;
@@ -36,6 +40,8 @@ public class FruitMoveState : GameState
         _fruitMover = fruitMover;
         _fruitSpawner = fruitSpawner;
         _itemDestroyer = itemDestroyer;
+        _completeLevel = completeLevel;
+        _gameOver = gameOver;
 
         cts = new CancellationTokenSource();
 
@@ -49,7 +55,7 @@ public class FruitMoveState : GameState
 
     public async override void Enter()
     {
-        await _fruitMover.SwapFruitsAsync(_swipeHandler.movingFruit[0], _swipeHandler.movingFruit[1],cts.Token);
+        await _fruitMover.SwapFruitsAsync(_swipeHandler.movingFruit[0], _swipeHandler.movingFruit[1], cancellationToken: cts.Token);
         CheckMatch();
     }
 
@@ -60,7 +66,7 @@ public class FruitMoveState : GameState
 
     public override void Exit()
     {
-        
+
     }
 
     private async void CheckMatch()
@@ -70,7 +76,13 @@ public class FruitMoveState : GameState
 
         List<Fruit> fruits = _matchCheker.FindMatch();
 
-        if(fruits.Count == 0)
+        if (_gameOver.IsGameOver)
+        {
+            _gameplayStateMachine.EnterState<GameOverState>();
+            return;
+        }
+
+        if (fruits.Count == 0)
         {
             _gameplayStateMachine.EnterState<PlayState>();
         }
@@ -92,19 +104,32 @@ public class FruitMoveState : GameState
 
     private async UniTaskVoid RestoreBoard()
     {
+        FindMovingItems();
+
+        await _fruitMover.MoveFruitDown(_movedFruits, 5f, cts.Token);
+        await _fruitSpawner.SpawnDeletedFruits(cts.Token);
+
+        if (_completeLevel.IsLevelComplet())
+            _gameplayStateMachine.EnterState<CompleteLevelState>();
+        else
+            CheckMatch();
+    }
+
+    private void FindMovingItems()
+    {
         int nullCount = 0;
 
         for (int i = 0; i < _gameBoard.x; i++)
         {
             for (int j = 0; j < _gameBoard.y; j++)
             {
-                if(_gameBoard.GetTile(i,j).curentItem == null)
+                if (_gameBoard.GetTile(i, j).curentItem == null)
                 {
                     nullCount++;
                 }
                 else
                 {
-                    if(nullCount > 0 && _gameBoard.GetTile(i, j).curentItem is IMoveble moveble)
+                    if (nullCount > 0 && _gameBoard.GetTile(i, j).curentItem is IMoveble moveble)
                     {
                         SelectMovingFruit(moveble, i, j - nullCount);
                     }
@@ -116,11 +141,6 @@ public class FruitMoveState : GameState
             }
             nullCount = 0;
         }
-
-        await _fruitMover.MoveFruitDown(_movedFruits, 5f,cts.Token);
-        await _fruitSpawner.SpawnDeletedFruits(cts.Token);
-
-        CheckMatch();
     }
 
     private void SelectMovingFruit(IMoveble moveble, int x, int y)

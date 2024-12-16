@@ -10,14 +10,16 @@ public abstract class Item : MonoBehaviour
     public ItemType itemType;
 
     private GameTile _curentTile;
+    private IItemProvider _provider;
     public GameTile CurentTile => _curentTile;
     public int Index => _index;
 
     protected ItemDestroyer _itemDestroyer;
 
-    public void Init(ItemDestroyer itemDestroyer, ItemType itemType)
+    public void Init(ItemDestroyer itemDestroyer, ItemType itemType, IItemProvider provider = null)
     {
         _itemDestroyer = itemDestroyer;
+        _provider = provider;
         this.itemType = itemType;
     }
     public void SetTile(GameTile newTile) => _curentTile = newTile;
@@ -26,6 +28,9 @@ public abstract class Item : MonoBehaviour
     {
         if(CurentTile.curentItem == null) return;
         else _curentTile.curentItem = null;
+
+        _provider?.RemoveItem(this);
+
         Tween tween = transform.DOScale(Vector3.zero, 0.2f);
         await tween.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(gameObject.GetCancellationTokenOnDestroy());
 

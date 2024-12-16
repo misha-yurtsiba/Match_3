@@ -33,7 +33,7 @@ public class SelectLevelView : MonoBehaviour
             LevelData data = JsonUtility.FromJson<LevelData>(_levelDatas[i].text);
 
             LevelButtonView levelButton = Instantiate(_levelButtonPrefab,_content.transform,_content.transform);
-            LevelButtonModel levelButtonModel = new LevelButtonModel(i, false);
+            LevelButtonModel levelButtonModel = new LevelButtonModel(data.Level, false);
             LevelButtonPresenter levelButtonPresenter = new LevelButtonPresenter(levelButtonModel, levelButton, _sceneChanger);
             
             levelButton.Init(levelButtonPresenter);
