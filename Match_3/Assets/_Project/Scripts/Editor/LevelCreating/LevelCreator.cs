@@ -257,7 +257,7 @@ public class LevelCreator : EditorWindow
             }
         }
 
-        SaveStarategy<LevelData> saveStrayegy = new JsonSaveStrayegy(_saveFolder);
-        saveStrayegy.Save(levelData);
+        ISaveStarategy saveStrayegy = new JsonSaveFromResources(_saveFolder);
+        saveStrayegy.Save(levelData,_level.ToString());
     }
 }
