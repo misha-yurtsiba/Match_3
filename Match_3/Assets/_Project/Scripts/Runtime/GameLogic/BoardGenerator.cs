@@ -13,7 +13,6 @@ public class BoardGenerator
 
     private Dictionary<ItemType, ItemFactory> _itemFactories;
 
-    private ISaveStarategy _saveStarategy = new JsonSaveFromResources();
     public BoardGenerator(GameTile gameTilePrefab, FruitFactory fruitFactory, ObstacleFactory obstacleFactory, BonusFactory bonusFactory)
     {
         _gameTilePrefab = gameTilePrefab;
@@ -33,6 +32,7 @@ public class BoardGenerator
 
         int width = levelData.width;
         int height = levelData.height;
+
         GameTile[,] gameTiles = new GameTile[width, height];
 
         int p = 0;

@@ -6,15 +6,18 @@ using DG.Tweening;
 public abstract class Item : MonoBehaviour
 {
     [SerializeField] private int _index;
+    [SerializeField] private float _pointsCount;
 
     public ItemType itemType;
 
+    protected ItemDestroyer _itemDestroyer;
+
     private GameTile _curentTile;
     private IItemProvider _provider;
+
     public GameTile CurentTile => _curentTile;
     public int Index => _index;
-
-    protected ItemDestroyer _itemDestroyer;
+    public float PointsCount => _pointsCount;
 
     public void Init(ItemDestroyer itemDestroyer, ItemType itemType, IItemProvider provider = null)
     {

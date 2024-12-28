@@ -27,7 +27,7 @@ public class LoadingSceneState : IState
 
     private async UniTask ChangeScene()
     {
-        _loadingAsyncOperation =  SceneManager.LoadSceneAsync(SceneChanger.sceneToChange.ToString());
+        _loadingAsyncOperation = SceneManager.LoadSceneAsync(SceneChanger.sceneToChange.ToString());
 
         await _loadingAsyncOperation;
 

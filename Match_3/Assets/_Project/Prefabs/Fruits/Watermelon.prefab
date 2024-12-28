@@ -97,3 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _index: 4
+  _pointsCount: 100
+  itemType: 0
+  isMatched: 0

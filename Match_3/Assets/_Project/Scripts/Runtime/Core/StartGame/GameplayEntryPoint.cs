@@ -10,6 +10,7 @@ public class GameplayEntryPoint : MonoBehaviour
     private InputHandler _inputHandler;
     private GameplayUIController _gameplayUIController;
     private TimerController _timerController;
+    private CameraPositioner _cameraPositioner;
     private ISaveStarategy _saveStarategy = new JsonSaveFromResources();
 
     [Inject]
@@ -24,12 +25,13 @@ public class GameplayEntryPoint : MonoBehaviour
     private void Start()
     {
         LevelData levelData = _saveStarategy.Load<LevelData>(SelectedLevel.Level.ToString());
+        _cameraPositioner = new CameraPositioner();
 
         _gameBoard.Init(levelData);
         _inputHandler.Init();
         _gameplayUIController.Init();
         _timerController.Init(levelData.gameTime);
-
+        _cameraPositioner.SetPosition(_gameBoard.x, _gameBoard.y, -17f);
         _gameplayStateMachine.EnterState<PlayState>();
     }
 }

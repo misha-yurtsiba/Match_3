@@ -36,7 +36,7 @@ public class LevelCreator : EditorWindow
     private void OnGUI()
     {
         GUILayout.Label("Object Spawner", EditorStyles.boldLabel);
-
+        
         EditorGUILayout.Space(10);
 
         _spawnItem = (Item)EditorGUILayout.ObjectField("Spawn item", _spawnItem, typeof(Item), false);

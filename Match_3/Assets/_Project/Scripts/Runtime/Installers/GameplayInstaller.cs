@@ -15,11 +15,15 @@ public class GameplayInstaller : MonoInstaller
     {
         BindGameTilePrefab();
 
+        BindGameScore();
+
         BindItemDestroyer();
 
         BindCompleteLevel();
 
         BindItemProviders();
+
+        BindObjectPools();
 
         BindFactory();
 
@@ -61,6 +65,13 @@ public class GameplayInstaller : MonoInstaller
             .NonLazy();
     }
 
+    private void BindGameScore() 
+    {
+        Container
+            .BindInterfacesAndSelfTo<GameScore>()
+            .AsSingle();
+    }
+
     private void BindItemDestroyer()
     {
         Container
@@ -80,6 +91,27 @@ public class GameplayInstaller : MonoInstaller
             .BindInterfacesAndSelfTo<ObstecleProvider>()
             .AsSingle();
     }
+
+    private void BindObjectPools()
+    {
+        SmokeExplosion smokeExplosionPrefab = Resources.Load<SmokeExplosion>("VFX/Smoke");
+        BoxExplosion boxExplosionPrefab = Resources.Load<BoxExplosion>("VFX/BoxExplosion");
+
+        ObjectPool<SmokeExplosion> smokeExplosionPool = new(smokeExplosionPrefab, 10);
+        ObjectPool<BoxExplosion> boxExplosionPool = new(boxExplosionPrefab, 10);
+
+
+        Container
+            .BindInterfacesAndSelfTo<ObjectPool<SmokeExplosion>>()
+            .FromInstance(smokeExplosionPool)
+            .AsSingle();
+        
+        Container
+            .BindInterfacesAndSelfTo<ObjectPool<BoxExplosion>>()
+            .FromInstance(boxExplosionPool)
+            .AsSingle();
+    }
+
     private void BindFactory()
     {
         Container

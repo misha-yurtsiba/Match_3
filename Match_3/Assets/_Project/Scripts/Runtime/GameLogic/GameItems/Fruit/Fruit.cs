@@ -8,6 +8,8 @@ public class Fruit : Item, IMoveble
 {
     public bool isMatched = false;
 
+    public ObjectPool<SmokeExplosion> smokeExplosionPool;
+    
     public Transform Transform
     {
         get =>  transform; 
@@ -24,7 +26,23 @@ public class Fruit : Item, IMoveble
 
             if(item is Bonus bonus)
                 bonus.DestroyAction(gameBoard);
-        } 
+        }
+    }
+
+    public async override UniTask DestroyItemAsync()
+    {
+        PlayDestroyParticle();
+
+        await base.DestroyItemAsync();
+    }
+
+    private void PlayDestroyParticle()
+    {
+        SmokeExplosion smokeExplosion = smokeExplosionPool.Get();
+
+        smokeExplosion.transform.position = transform.position;
+
+        smokeExplosion.Play();
     }
 
     private IEnumerable<Item> CheckNeibghorTiles(GameTile[,] gameBoard)

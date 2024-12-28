@@ -8,14 +8,19 @@ public class FruitFactory : ItemFactory
     private readonly FruitsPrefabs _fruitsPrefabs;
     private readonly ItemDestroyer _itemDestroyer;
 
-    public FruitFactory(FruitsPrefabs fruitsPrefabs, ItemDestroyer itemDestroyer)
+    private readonly ObjectPool<SmokeExplosion> _smokeExplosionPool;
+
+    public FruitFactory(FruitsPrefabs fruitsPrefabs, ItemDestroyer itemDestroyer, ObjectPool<SmokeExplosion> smokeExplosionPool)
     {
         _fruitsPrefabs = fruitsPrefabs;
         _itemDestroyer = itemDestroyer;
+        _smokeExplosionPool = smokeExplosionPool;
     }
 
     public override Item Create(Vector3 position, GameTile [,] gameTiles,int index)
     {
+        Fruit fruit;
+
         if(index < 0)
         {
             int randomIndex;
@@ -25,18 +30,16 @@ public class FruitFactory : ItemFactory
                 randomIndex = Random.Range(0, _fruitsPrefabs.prefabList.Count);
             }
             while (CheckNaighbor((int)position.x, (int)position.y, randomIndex, gameTiles));
-            Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], position, Quaternion.identity);
-            fruit.Init(_itemDestroyer, ItemType.Fruit);
-
-            return fruit;
+            fruit = Object.Instantiate(_fruitsPrefabs.prefabList[randomIndex], position, Quaternion.identity);
         }
         else
         {
-            Fruit fruit = Object.Instantiate(_fruitsPrefabs.prefabList[index], position, Quaternion.identity);
-            fruit.Init(_itemDestroyer, ItemType.Fruit);
-
-            return fruit;
+            fruit = Object.Instantiate(_fruitsPrefabs.prefabList[index], position, Quaternion.identity);
         }
+
+        fruit.Init(_itemDestroyer, ItemType.Fruit);
+        fruit.smokeExplosionPool = _smokeExplosionPool;
+        return fruit;
     }
 
 

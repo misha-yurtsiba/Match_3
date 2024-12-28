@@ -8,17 +8,24 @@ public class ObstacleFactory : ItemFactory
     private readonly ItemDestroyer _itemDestroyer;
     private readonly IItemProvider _itemProvider;
 
-    public ObstacleFactory(ItemDestroyer itemDestroyer, ObstecleProvider obstecleProvider)
+    private readonly ObjectPool<BoxExplosion> _explosionPool;
+
+    public ObstacleFactory(ItemDestroyer itemDestroyer, ObstecleProvider obstecleProvider, ObjectPool<BoxExplosion> explosionPool)
     {
         _itemDestroyer = itemDestroyer;
-        _obstaclePrefab = Resources.Load<Obstacle>("Box");
         _itemProvider = obstecleProvider;
+        _explosionPool = explosionPool;
+        
+        _obstaclePrefab = Resources.Load<Obstacle>("Box");
+
     }
 
     public override Item Create(Vector3 position, GameTile[,] gameTiles,int index)
     {
         Obstacle obstacle = Object.Instantiate(_obstaclePrefab, position, Quaternion.identity);
         obstacle.Init(_itemDestroyer,ItemType.Obstacle,_itemProvider);
+        obstacle.boxExplosionPool = _explosionPool;
+
         _itemProvider.AddItem(obstacle);
 
         return obstacle;

@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _index: 0
+  _pointsCount: 75
   itemType: 2
 --- !u!1 &7667430370993813739
 GameObject:

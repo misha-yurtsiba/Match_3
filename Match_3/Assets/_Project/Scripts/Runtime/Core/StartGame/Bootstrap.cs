@@ -20,26 +20,31 @@ public class Bootstrap : MonoBehaviour
     {
         Application.targetFrameRate = 60;
 
-        GameData gameData = _saveStarStrategy.Load<GameData>(nameof(GameData));
-
-        if (gameData == null)
-            CreateGameData();
+        CreateGameData();
 
         _sceneChanger.ChangeScene(Scenes.Menu);
     }
 
     private void CreateGameData()
     {
+        GameData gameData = _saveStarStrategy.Load<GameData>(nameof(GameData));
+
         TextAsset[] _levelDatas = Resources.LoadAll<TextAsset>("LevelData");
-        GameData gameData = new GameData();
+       
+        gameData ??= new GameData();
 
         for (int i = 0; i < _levelDatas.Length; i++)
         {
-            gameData.completedLevels.Add(i + 1, false);
+            if(!gameData.completedLevels.ContainsKey(i + 1))
+            {
+                gameData.completedLevels.Add(i + 1, false);
+            }
         }
 
         gameData.isFirstRun = false;
 
         _saveStarStrategy.Save(gameData, nameof(GameData));
+
+        Resources.UnloadUnusedAssets();
     }
 }

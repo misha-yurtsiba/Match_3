@@ -16,10 +16,7 @@ public class ObstecleProvider : IItemProvider
 
     public event Action<int> OnValueChanged;
 
-    public int Count
-    {
-        get => _items.Count;
-    }
+    public int Count => _items.Count;
 
     public void AddItem(Item item)
     {
