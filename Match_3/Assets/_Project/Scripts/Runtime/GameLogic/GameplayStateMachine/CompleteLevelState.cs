@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-public class CompleteLevelState : GameState
+﻿public class CompleteLevelState : GameState
 {
     private readonly GameplayUIController _gameplayUIController;
     private readonly TimerController _timerController;

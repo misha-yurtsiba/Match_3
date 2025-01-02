@@ -4,10 +4,11 @@ using Zenject;
 public class TimerController : MonoBehaviour
 {
     public event Action<Timer> OnValueChanget;
+    
+    public bool canUpdateTimer;
+
     private Timer _timer;
     private GameOver _gameOver;
-
-    public bool canUpdateTimer;
 
     [Inject]
     private void Construct(GameOver gameOver)

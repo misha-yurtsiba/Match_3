@@ -5,20 +5,11 @@ public class BoardGenerator
 {
     private readonly GameTile _gameTilePrefab;
 
-    private readonly FruitFactory _fruitFactory;
-    private readonly ObstacleFactory _obstacleFactory;
-    private readonly BonusFactory _bonusFactory;
-
-    private ItemFactory _itemFactory;
-
     private Dictionary<ItemType, ItemFactory> _itemFactories;
 
     public BoardGenerator(GameTile gameTilePrefab, FruitFactory fruitFactory, ObstacleFactory obstacleFactory, BonusFactory bonusFactory)
     {
         _gameTilePrefab = gameTilePrefab;
-        _fruitFactory = fruitFactory;
-        _obstacleFactory = obstacleFactory;
-        _bonusFactory = bonusFactory;
 
         _itemFactories = new Dictionary<ItemType, ItemFactory>()
         {
@@ -35,13 +26,14 @@ public class BoardGenerator
 
         GameTile[,] gameTiles = new GameTile[width, height];
 
-        int p = 0;
+        int counter = 0;
+
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                SpawnOneItemFromData(i, j, offset, gameTiles, levelData.itemData[p]);
-                p++;
+                SpawnOneItemFromData(i, j, offset, gameTiles, levelData.itemData[counter]);
+                counter++;
             }
         }
 

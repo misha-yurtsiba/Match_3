@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1187991418596932703}
   - component: {fileID: 1187991418598063775}
   - component: {fileID: 4291444516610349959}
+  - component: {fileID: -5424963498524806213}
   m_Layer: 0
   m_Name: Kiwi
   m_TagString: Untagged
@@ -100,3 +101,15 @@ MonoBehaviour:
   _pointsCount: 100
   itemType: 0
   isMatched: 0
+--- !u!114 &-5424963498524806213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187991418595795039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700a0f152821f284a9cf915de6589243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

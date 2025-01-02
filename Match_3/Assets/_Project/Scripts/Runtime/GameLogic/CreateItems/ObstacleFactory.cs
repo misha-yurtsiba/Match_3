@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstacleFactory : ItemFactory
 {
-    private readonly Obstacle _obstaclePrefab;
+    private readonly ObstaclePrefabs _obstaclePrefabs;
     private readonly ItemDestroyer _itemDestroyer;
     private readonly IItemProvider _itemProvider;
 
@@ -16,13 +16,13 @@ public class ObstacleFactory : ItemFactory
         _itemProvider = obstecleProvider;
         _explosionPool = explosionPool;
         
-        _obstaclePrefab = Resources.Load<Obstacle>("Box");
+        _obstaclePrefabs = Resources.Load<ObstaclePrefabs>("Configs/ObstaclePrefabs");
 
     }
 
     public override Item Create(Vector3 position, GameTile[,] gameTiles,int index)
     {
-        Obstacle obstacle = Object.Instantiate(_obstaclePrefab, position, Quaternion.identity);
+        Obstacle obstacle = Object.Instantiate(_obstaclePrefabs.obstaclePrefabs[0], position, Quaternion.identity);
         obstacle.Init(_itemDestroyer,ItemType.Obstacle,_itemProvider);
         obstacle.boxExplosionPool = _explosionPool;
 

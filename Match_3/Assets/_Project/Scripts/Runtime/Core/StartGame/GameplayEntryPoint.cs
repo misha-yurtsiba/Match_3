@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +9,7 @@ public class GameplayEntryPoint : MonoBehaviour
     private GameplayUIController _gameplayUIController;
     private TimerController _timerController;
     private CameraPositioner _cameraPositioner;
-    private ISaveStarategy _saveStarategy = new JsonSaveFromResources();
+    private ISaveStarategy _saveStarategy;
 
     [Inject]
     private void Construct(GameplayStateMachine gameplayStateMachine, GameBoard gameBoard, InputHandler inputHandler, GameplayUIController gameplayUIController, TimerController timerController)
@@ -24,8 +22,11 @@ public class GameplayEntryPoint : MonoBehaviour
     }
     private void Start()
     {
-        LevelData levelData = _saveStarategy.Load<LevelData>(SelectedLevel.Level.ToString());
+        _saveStarategy = new JsonSaveFromResources();
         _cameraPositioner = new CameraPositioner();
+
+        LevelData levelData = _saveStarategy.Load<LevelData>(SelectedLevel.Level.ToString());
+        levelData ??= _saveStarategy.Load<LevelData>((SelectedLevel.Level -= 1).ToString());
 
         _gameBoard.Init(levelData);
         _inputHandler.Init();

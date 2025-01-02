@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DestroyLineAndColumnStrategy : BonusStrategy
 {
@@ -9,11 +8,12 @@ public class DestroyLineAndColumnStrategy : BonusStrategy
     {
         _itemDestroyer = itemDestroyer;
     }
-    public override async UniTaskVoid Execute(GameBoard gameBoard, Item item)
+    public override void Execute(GameBoard gameBoard, Item item)
     {
         for (int i = 1; i < Mathf.Max(gameBoard.x,gameBoard.y); i++)
         {
             int x = item.CurentTile.xPos;
+            int y = item.CurentTile.yPos;
 
             if (x + i < gameBoard.x)
                 _itemDestroyer.DestroyOneItem(gameBoard._board[x + i, item.CurentTile.yPos].curentItem);
@@ -21,13 +21,11 @@ public class DestroyLineAndColumnStrategy : BonusStrategy
             if (x - i >= 0)
                 _itemDestroyer.DestroyOneItem(gameBoard._board[x - i, item.CurentTile.yPos].curentItem);
 
-            if (x + i < gameBoard.x)
-                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, x + i].curentItem);
+            if (y + i < gameBoard.y)
+                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, y + i].curentItem);
 
-            if (x - i >= 0)
-                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, x - i].curentItem);
-
-            await UniTask.DelayFrame(1, cancellationToken: item.GetCancellationTokenOnDestroy());
+            if (y - i >= 0)
+                _itemDestroyer.DestroyOneItem(gameBoard._board[item.CurentTile.xPos, y - i].curentItem);
         }
     }
 }

@@ -1,9 +1,8 @@
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.Threading;
 using DG.Tweening;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 
 public class FruitMover
 {
@@ -68,6 +67,7 @@ public class FruitMover
             .SetEase(Ease.Linear)
             .SetLink(fruit.Transform.gameObject)
             .OnKill(() => tween.Kill());
+        
 
         UniTask uniTask = tween.AsyncWaitForCompletion().AsUniTask();
         await uniTask.AttachExternalCancellation(cancellationToken);

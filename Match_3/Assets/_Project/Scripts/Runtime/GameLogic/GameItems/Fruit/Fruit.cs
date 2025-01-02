@@ -55,11 +55,7 @@ public class Fruit : Item, IMoveble
             Vector2Int.down,
             Vector2Int.up,
             Vector2Int.right,
-            Vector2Int.left,
-            new Vector2Int(1, 1),
-            new Vector2Int(-1, -1),
-            new Vector2Int(1, -1),
-            new Vector2Int(-1, 1)
+            Vector2Int.left
         };
 
         List<Item> obstacles = new List<Item>();

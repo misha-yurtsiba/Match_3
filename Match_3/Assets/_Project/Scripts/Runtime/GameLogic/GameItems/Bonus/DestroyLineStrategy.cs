@@ -1,6 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-
-public class DestroyLineStrategy : BonusStrategy
+﻿public class DestroyLineStrategy : BonusStrategy
 {
     private readonly ItemDestroyer _itemDestroyer;
 
@@ -8,7 +6,7 @@ public class DestroyLineStrategy : BonusStrategy
     {
         _itemDestroyer = itemDestroyer;
     }
-    public override async UniTaskVoid Execute(GameBoard gameBoard,Item item)
+    public override void Execute(GameBoard gameBoard,Item item)
     {
         for(int i = 1; i < gameBoard.x; i++)
         {
@@ -19,8 +17,6 @@ public class DestroyLineStrategy : BonusStrategy
 
             if (x - i >= 0)
                 _itemDestroyer.DestroyOneItem(gameBoard._board[x - i, item.CurentTile.yPos].curentItem);
-
-            await UniTask.DelayFrame(2, cancellationToken: item.GetCancellationTokenOnDestroy());
         }
     }
 }

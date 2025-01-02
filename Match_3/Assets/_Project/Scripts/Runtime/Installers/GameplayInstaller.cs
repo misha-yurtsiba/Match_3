@@ -8,7 +8,6 @@ public class GameplayInstaller : MonoInstaller
     [SerializeField] private GameplayStateMachine _gameplayStateMachine;
     [SerializeField] private GameTile _gameTilePrefab;
     [SerializeField] private InputHandler _inputHandler;
-    [SerializeField] private FruitsPrefabs _fruitsPrefabs;
     [SerializeField] private TimerController _timerController;
     [SerializeField] private GameplayUIController _gameplayUIController;
     public override void InstallBindings()
@@ -57,12 +56,6 @@ public class GameplayInstaller : MonoInstaller
             .FromInstance(_gameTilePrefab)
             .AsSingle()
             .NonLazy();
-
-        Container
-            .BindInterfacesAndSelfTo<FruitsPrefabs>()
-            .FromInstance(_fruitsPrefabs)
-            .AsSingle()
-            .NonLazy();
     }
 
     private void BindGameScore() 
@@ -96,9 +89,11 @@ public class GameplayInstaller : MonoInstaller
     {
         SmokeExplosion smokeExplosionPrefab = Resources.Load<SmokeExplosion>("VFX/Smoke");
         BoxExplosion boxExplosionPrefab = Resources.Load<BoxExplosion>("VFX/BoxExplosion");
+        BonusExplosion bonusExplosion = Resources.Load<BonusExplosion>("VFX/BonusExplosion");
 
         ObjectPool<SmokeExplosion> smokeExplosionPool = new(smokeExplosionPrefab, 10);
         ObjectPool<BoxExplosion> boxExplosionPool = new(boxExplosionPrefab, 10);
+        ObjectPool<BonusExplosion> bonusExplosionPool = new(bonusExplosion, 1);
 
 
         Container
@@ -109,6 +104,11 @@ public class GameplayInstaller : MonoInstaller
         Container
             .BindInterfacesAndSelfTo<ObjectPool<BoxExplosion>>()
             .FromInstance(boxExplosionPool)
+            .AsSingle();
+        
+        Container
+            .BindInterfacesAndSelfTo<ObjectPool<BonusExplosion>>()
+            .FromInstance(bonusExplosionPool)
             .AsSingle();
     }
 

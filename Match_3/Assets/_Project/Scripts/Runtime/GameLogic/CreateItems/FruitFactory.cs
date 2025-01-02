@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 public class FruitFactory : ItemFactory
 {
@@ -10,11 +7,12 @@ public class FruitFactory : ItemFactory
 
     private readonly ObjectPool<SmokeExplosion> _smokeExplosionPool;
 
-    public FruitFactory(FruitsPrefabs fruitsPrefabs, ItemDestroyer itemDestroyer, ObjectPool<SmokeExplosion> smokeExplosionPool)
+    public FruitFactory(ItemDestroyer itemDestroyer, ObjectPool<SmokeExplosion> smokeExplosionPool)
     {
-        _fruitsPrefabs = fruitsPrefabs;
         _itemDestroyer = itemDestroyer;
         _smokeExplosionPool = smokeExplosionPool;
+
+        _fruitsPrefabs = Resources.Load<FruitsPrefabs>("Configs/FruitsPrefabs");
     }
 
     public override Item Create(Vector3 position, GameTile [,] gameTiles,int index)

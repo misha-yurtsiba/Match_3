@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class DestroyNeighborSreategy : BonusStrategy
@@ -22,7 +21,7 @@ public class DestroyNeighborSreategy : BonusStrategy
 
         _itemDestroyer = itemDestroyer;
     }
-    public override async UniTaskVoid Execute(GameBoard gameBoard, Item item)
+    public override void Execute(GameBoard gameBoard, Item item)
     {
         foreach (Vector2Int direction in _directions)
         {
@@ -32,7 +31,6 @@ public class DestroyNeighborSreategy : BonusStrategy
             if (newX >= 0 && newX < gameBoard.x && newY >= 0 && newY < gameBoard.y && (gameBoard._board[newX, newY].curentItem is Item neighborItem))
             {
                 _itemDestroyer.DestroyOneItem(neighborItem);
-                await UniTask.DelayFrame(1, cancellationToken: neighborItem.GetCancellationTokenOnDestroy());
             }
         }
     }

@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class MatchCheker
 {
@@ -12,7 +10,6 @@ public class MatchCheker
 
         _fruits = new List<Fruit>();
     }
-
     public List<Fruit> FindMatch()
     {
         _fruits.Clear();

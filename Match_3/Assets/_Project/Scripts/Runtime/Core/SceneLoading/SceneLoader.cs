@@ -6,9 +6,7 @@ public class SceneChanger : ISceneChanger
 {
     public static Scenes sceneToChange;
 
-    private readonly LoadingCurtain _loadindCurtain;
     private readonly StateMachine _stateMachine;
-    private AsyncOperation _loadingAsyncOperation;
 
     public SceneChanger(StateMachine stateMachine)
     {

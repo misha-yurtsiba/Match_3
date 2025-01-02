@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading;
 using DG.Tweening;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 
 public class FruitSpawner
 {
@@ -45,7 +44,7 @@ public class FruitSpawner
             float randomNum = Random.value;
 
             if(1 - _spawnChance <= randomNum)
-                item = _bonusFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board, 0);
+                item = _bonusFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board, -1);
             else
                 item = _itemFactory.Create(new Vector3(gameTile.xPos, gameTile.yPos, 0) + _gameBoard.itemOffset, _gameBoard._board, -1);
 

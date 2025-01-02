@@ -6,7 +6,7 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable
     private readonly Transform _container;
 
     private readonly T _objectPrefab;
-
+    
     public ObjectPool(T prefab, int startCapacity)
     {
         _freeObjects = new Queue<IPoolable>(startCapacity);
@@ -17,15 +17,12 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable
 
         for(int i = 0; i < startCapacity; i++)
             _freeObjects.Enqueue(CreateNewObject());
-
     }
 
     public T Get() 
     {
-        T poolable;
+        T poolable = (_freeObjects.Count == 0) ? CreateNewObject() : _freeObjects.Dequeue() as T;
 
-        poolable = (_freeObjects.Count == 0) ? CreateNewObject() : _freeObjects.Dequeue() as T;
-        
         poolable.Destroyed += Return;
         poolable.GameObject.SetActive(true);
 

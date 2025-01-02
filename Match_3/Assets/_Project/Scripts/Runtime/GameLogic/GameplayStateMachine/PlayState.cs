@@ -21,9 +21,4 @@ public class PlayState : GameState
     {
         _inputHandler.DisableInput();
     }
-
-    public override void Update()
-    {
-        
-    }
 }

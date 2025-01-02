@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine;
 public abstract class Item : MonoBehaviour
 {
     [SerializeField] private int _index;
@@ -16,13 +14,14 @@ public abstract class Item : MonoBehaviour
     private IItemProvider _provider;
 
     public GameTile CurentTile => _curentTile;
-    public int Index => _index;
     public float PointsCount => _pointsCount;
+    public int Index => _index;
 
     public void Init(ItemDestroyer itemDestroyer, ItemType itemType, IItemProvider provider = null)
     {
         _itemDestroyer = itemDestroyer;
         _provider = provider;
+
         this.itemType = itemType;
     }
     public void SetTile(GameTile newTile) => _curentTile = newTile;
@@ -41,5 +40,12 @@ public abstract class Item : MonoBehaviour
     }
 
     virtual public void DestroyAction(GameBoard gameBoard) { }
+
+    protected void PlayDestroyParticle(ExplosionParlicle explosionParlicle)
+    {
+        explosionParlicle.transform.position = transform.position;
+
+        explosionParlicle.Play();
+    }
 }
 

@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: BonusPrefabsConfig
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 920489928758295074, guid: 2b24f3576fb44094283f116ef94d2021, type: 3}
+  - {fileID: 1371443520765377763, guid: cc48fdecd9b15ba4b87a89241e54d4bd, type: 3}
+  - {fileID: 6655946492316850986, guid: 700725b7f005d3f42b3f36d221c992ee, type: 3}
+  - {fileID: 5035120202121883918, guid: 7bacfa49e381bc743b374f87467e8cda, type: 3}
